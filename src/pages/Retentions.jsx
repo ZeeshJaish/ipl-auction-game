@@ -21,12 +21,13 @@ const Retentions = () => {
   
   // Sorting squad by ratings for easier picking
   const squad = [...myTeam.squad].sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
+  const maxRetentions = state.isMegaAuction ? 2 : 4;
 
   const toggleRetention = (playerId) => {
     if (selectedRetentions.includes(playerId)) {
       setSelectedRetentions(selectedRetentions.filter(id => id !== playerId));
     } else {
-      if (selectedRetentions.length < 4) {
+      if (selectedRetentions.length < maxRetentions) {
         setSelectedRetentions([...selectedRetentions, playerId]);
       }
     }
@@ -67,8 +68,18 @@ const Retentions = () => {
       )}
 
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ color: 'white', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '2.5rem' }}>Season {state.season} Retentions</h1>
-        <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginTop: '0.5rem' }}>Select up to 4 players to retain. Costs: 15Cr, 12Cr, 8Cr, 5Cr.</p>
+        {state.isMegaAuction ? (
+          <>
+            <h1 style={{ color: 'var(--accent-red)', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '3rem', textShadow: '0 0 10px rgba(239, 68, 68, 0.5)' }}>MEGA AUCTION</h1>
+            <p style={{ color: 'white', fontSize: '1.2rem', marginTop: '0.5rem' }}>Season {state.season} brings a complete reshuffle!</p>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem', marginTop: '0.5rem' }}>Select up to <strong style={{color:'var(--accent-red)'}}>2</strong> players to retain. Costs: 15Cr, 12Cr.</p>
+          </>
+        ) : (
+          <>
+            <h1 style={{ color: 'white', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '2.5rem' }}>Season {state.season} Retentions</h1>
+            <p style={{ color: 'var(--text-secondary)', fontSize: '1.2rem', marginTop: '0.5rem' }}>Select up to 4 players to retain. Costs: 15Cr, 12Cr, 8Cr, 5Cr.</p>
+          </>
+        )}
       </div>
 
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2rem', alignItems: 'flex-start' }}>
@@ -77,7 +88,7 @@ const Retentions = () => {
         <div className="glass-panel" style={{ flex: 2, minWidth: '300px', padding: '1.5rem' }}>
           <h3 style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between' }}>
             <span>Your Squad</span>
-            <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Retained: <span style={{ color: selectedRetentions.length > 0 ? 'var(--accent-green)' : 'inherit' }}>{selectedRetentions.length}/4</span></span>
+            <span style={{ color: 'var(--text-secondary)', fontSize: '1rem' }}>Retained: <span style={{ color: selectedRetentions.length > 0 ? 'var(--accent-green)' : 'inherit' }}>{selectedRetentions.length}/{maxRetentions}</span></span>
           </h3>
           
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -100,8 +111,8 @@ const Retentions = () => {
                     borderRadius: '8px',
                     cursor: 'pointer',
                     transition: 'all 0.2s',
-                    opacity: (!isSelected && selectedRetentions.length >= 4) ? 0.5 : 1,
-                    pointerEvents: (!isSelected && selectedRetentions.length >= 4) ? 'none' : 'auto'
+                    opacity: (!isSelected && selectedRetentions.length >= maxRetentions) ? 0.5 : 1,
+                    pointerEvents: (!isSelected && selectedRetentions.length >= maxRetentions) ? 'none' : 'auto'
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
@@ -154,7 +165,7 @@ const Retentions = () => {
           <div style={{ background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '1rem', borderRadius: '8px', marginBottom: '2rem', display: 'flex', gap: '0.5rem', alignItems: 'flex-start' }}>
             <ShieldAlert size={18} color="var(--accent-red)" style={{ flexShrink: 0, marginTop: '2px' }} />
             <div style={{ fontSize: '0.85rem', color: 'var(--text-secondary)' }}>
-              All unselected players will be released into the auction pool. AI teams will automatically retain their top 4 players. Your RTM cards will be reset to 2.
+              All unselected players will be released into the auction pool. AI teams will automatically retain their top {maxRetentions} players. Your RTM cards will be reset to 2.
             </div>
           </div>
 

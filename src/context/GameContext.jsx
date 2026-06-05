@@ -68,6 +68,7 @@ const getInitialState = () => ({
   tradeOffers: [],
   newsItems: [],
   season: 2026,
+  isMegaAuction: false,
   legacyStats: [],
   availablePlayers: [...initialPlayers]
 });
@@ -458,25 +459,44 @@ const gameReducer = (state, action) => {
 
       currentAvailablePlayers = currentAvailablePlayers.map(updatePlayerStats);
 
+      // Generate 3-5 Wonderkids
+      const numWonderkids = Math.floor(Math.random() * 3) + 3;
+      const firstNames = ["Aarav", "Vihaan", "Arjun", "Sai", "Kabir", "Aryan", "Dhruv", "Ishaan", "Rohan", "Dev"];
+      const lastNames = ["Sharma", "Patel", "Singh", "Kumar", "Gupta", "Rao", "Joshi", "Iyer", "Yadav", "Verma"];
+      const roles = ["Batsman", "Bowler", "All-Rounder", "Wicket-Keeper"];
+      
+      for (let i = 0; i < numWonderkids; i++) {
+        const role = roles[Math.floor(Math.random() * roles.length)];
+        const isOverseas = Math.random() < 0.2;
+        currentAvailablePlayers.push({
+          id: `wonderkid_${Date.now()}_${i}`,
+          name: `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`,
+          role: role,
+          basePrice: 2000000,
+          isOverseas: isOverseas,
+          battingRating: role === 'Batsman' || role === 'Wicket-Keeper' ? Math.floor(Math.random() * 20) + 75 : Math.floor(Math.random() * 20) + 50,
+          bowlingRating: role === 'Bowler' ? Math.floor(Math.random() * 20) + 75 : Math.floor(Math.random() * 20) + 50,
+          poolName: 'Uncapped Players',
+          age: 18 + Math.floor(Math.random() * 2),
+          form: 'NORMAL',
+          injuredMatches: 0,
+          isWonderkid: true
+        });
+      }
+
       const updatedTeams = state.teams.map(t => {
         const agedSquad = t.squad.map(updatePlayerStats);
 
-        // AI Retentions: Keep top 4 rated players
-        let retained = [];
-        let released = [];
-        
-        if (t.id === state.userTeam) {
-          // User retentions handled via UI, for now we will just release everyone unless a separate step is made
-          // But wait, the user needs to select retentions. 
-          // So we should switch `auctionPhase` to 'RETENTIONS'
-        }
-
+        // AI Retentions: Handled in FINALIZE_RETENTIONS now
         return { ...t, squad: agedSquad };
       });
+
+      const isMegaAuction = (state.season % 3 === 0);
 
       return {
         ...state,
         season: state.season + 1,
+        isMegaAuction,
         legacyStats: newLegacyStats,
         auctionPhase: 'RETENTIONS',
         teams: updatedTeams,
@@ -486,6 +506,7 @@ const gameReducer = (state, action) => {
 
     case 'FINALIZE_RETENTIONS': {
       const { userRetentions } = action.payload; // array of player IDs
+      const retentionLimit = state.isMegaAuction ? 2 : 4;
       
       let allAvailablePlayers = [...state.availablePlayers];
 
@@ -497,10 +518,10 @@ const gameReducer = (state, action) => {
           retained = t.squad.filter(p => userRetentions.includes(p.id));
           released = t.squad.filter(p => !userRetentions.includes(p.id));
         } else {
-          // AI Retains top 4 players
+          // AI Retains top players up to the limit
           const sortedSquad = [...t.squad].sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
-          retained = sortedSquad.slice(0, 4);
-          released = sortedSquad.slice(4);
+          retained = sortedSquad.slice(0, retentionLimit);
+          released = sortedSquad.slice(retentionLimit);
         }
 
         // Deduct purse for retentions (e.g., 15Cr, 12Cr, 8Cr, 5Cr)

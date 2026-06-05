@@ -9,6 +9,10 @@ const Tournament = () => {
   const [activeTab, setActiveTab] = useState('STANDINGS');
   const [matchResult, setMatchResult] = useState(null);
   
+  // Tactical Pause State
+  const [tacticalPause, setTacticalPause] = useState(null);
+
+  const myTeam = state.teams.find(t => t.id === state.userTeam);
   // Playing 11 Selection State
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [selected11, setSelected11] = useState([]);
@@ -189,6 +193,45 @@ const Tournament = () => {
     const aiT2Cap = t2_captain || t2_11WithTeam.sort((a,b) => (b.battingRating+b.bowlingRating) - (a.battingRating+a.bowlingRating))[0]?.id;
 
     const inn1 = simulateInnings(t1_11WithTeam, t2_11WithTeam, aiT1Cap, aiT2Cap);
+
+    // If user match, pause for Tactical Intervention
+    const isUserMatch = team1.id === state.userTeam || team2.id === state.userTeam;
+    if (isUserMatch) {
+      setTacticalPause({
+        inn1, t1_11WithTeam, t2_11WithTeam, aiT1Cap, aiT2Cap, team1, team2
+      });
+      return; // Stop execution here, wait for user input
+    }
+
+    // If not user match, continue automatically
+    finishMatchExecution(inn1, t2_11WithTeam, t1_11WithTeam, aiT2Cap, aiT1Cap, team1, team2);
+  };
+
+  const handleTacticalChoice = (tactic) => {
+    const { inn1, t1_11WithTeam, t2_11WithTeam, aiT1Cap, aiT2Cap, team1, team2 } = tacticalPause;
+
+    // Apply tactic to user's team for Innings 2
+    const userIsTeam1 = team1.id === state.userTeam;
+    const modifiedT1 = t1_11WithTeam.map(p => ({...p}));
+    const modifiedT2 = t2_11WithTeam.map(p => ({...p}));
+
+    const userTeamRoster = userIsTeam1 ? modifiedT1 : modifiedT2;
+
+    userTeamRoster.forEach(p => {
+      if (tactic === 'AGGRESSIVE') {
+         p.battingRating = Math.min(100, p.battingRating * 1.2);
+         p.bowlingRating = p.bowlingRating * 0.8; // Risky bowling
+      } else if (tactic === 'DEFENSIVE') {
+         p.battingRating = p.battingRating * 0.8; // Cautious batting
+         p.bowlingRating = Math.min(100, p.bowlingRating * 1.2); // Tight bowling
+      }
+    });
+
+    setTacticalPause(null);
+    finishMatchExecution(inn1, modifiedT2, modifiedT1, aiT2Cap, aiT1Cap, team1, team2);
+  };
+
+  const finishMatchExecution = (inn1, t2_11WithTeam, t1_11WithTeam, aiT2Cap, aiT1Cap, team1, team2) => {
     const inn2 = simulateInnings(t2_11WithTeam, t1_11WithTeam, aiT2Cap, aiT1Cap);
 
     let resultStr = "";
@@ -578,6 +621,52 @@ const Tournament = () => {
         )}
 
       </div>
+
+      {/* Tactical Pause Modal */}
+      {tacticalPause && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(10px)', zIndex: 10000, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="glass-panel" style={{ width: '100%', maxWidth: '600px', padding: '2rem', textAlign: 'center', border: '2px solid var(--accent-gold)' }}>
+            <h2 style={{ color: 'var(--accent-gold)', marginBottom: '1rem', fontSize: '2rem', textTransform: 'uppercase' }}>Tactical Timeout</h2>
+            <div style={{ marginBottom: '2rem', fontSize: '1.2rem' }}>
+              <p style={{ color: 'var(--text-secondary)' }}>Innings 1 Completed</p>
+              <p style={{ fontWeight: 'bold', fontSize: '1.5rem', marginTop: '0.5rem' }}>
+                {tacticalPause.team1.shortName}: {tacticalPause.inn1.totalRuns}/{tacticalPause.inn1.totalWickets}
+              </p>
+            </div>
+
+            <p style={{ marginBottom: '2rem', color: 'white', fontSize: '1.1rem' }}>Choose your tactic for Innings 2:</p>
+
+            <div style={{ display: 'flex', gap: '1rem', flexDirection: 'column' }}>
+              <button 
+                className="glass-btn primary" 
+                style={{ background: 'rgba(239, 68, 68, 0.2)', borderColor: 'var(--accent-red)', padding: '1.5rem' }}
+                onClick={() => handleTacticalChoice('AGGRESSIVE')}
+              >
+                <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--accent-red)', marginBottom: '0.5rem' }}>🔥 Aggressive Mode</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>+20% Batting Rating | -20% Bowling Rating. Smash boundaries, but risk losing quick wickets.</div>
+              </button>
+
+              <button 
+                className="glass-btn primary" 
+                style={{ background: 'rgba(59, 130, 246, 0.2)', borderColor: '#3b82f6', padding: '1.5rem' }}
+                onClick={() => handleTacticalChoice('DEFENSIVE')}
+              >
+                <div style={{ fontWeight: 'bold', fontSize: '1.2rem', color: '#3b82f6', marginBottom: '0.5rem' }}>🛡️ Defensive Mode</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>+20% Bowling Rating | -20% Batting Rating. Bowl tight lines and preserve wickets.</div>
+              </button>
+              
+              <button 
+                className="glass-btn" 
+                style={{ padding: '1rem', marginTop: '1rem' }}
+                onClick={() => handleTacticalChoice('BALANCED')}
+              >
+                <div style={{ fontWeight: 'bold' }}>⚖️ Balanced Approach</div>
+                <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Play standard cricket with normal ratings.</div>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Playing 11 Selection Modal (The Locker Room) */}
       {showSelectionModal && (
