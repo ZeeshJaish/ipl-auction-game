@@ -84,10 +84,11 @@ const Tournament = () => {
   const isPlayoffs = state.currentMatchIndex >= 45; // Assuming 45 group matches
 
   const autoPick11 = (squad) => {
-    let wks = squad.filter(p => p.role === 'Wicket-Keeper').sort((a,b) => b.battingRating - a.battingRating);
-    let bats = squad.filter(p => p.role === 'Batsman').sort((a,b) => b.battingRating - a.battingRating);
-    let bowls = squad.filter(p => p.role === 'Bowler').sort((a,b) => b.bowlingRating - a.bowlingRating);
-    let alls = squad.filter(p => p.role === 'All-Rounder').sort((a,b) => (b.battingRating+b.bowlingRating) - (a.battingRating+a.bowlingRating));
+    let availableSquad = squad.filter(p => !p.injuredMatches || p.injuredMatches <= 0);
+    let wks = availableSquad.filter(p => p.role === 'Wicket-Keeper').sort((a,b) => b.battingRating - a.battingRating);
+    let bats = availableSquad.filter(p => p.role === 'Batsman').sort((a,b) => b.battingRating - a.battingRating);
+    let bowls = availableSquad.filter(p => p.role === 'Bowler').sort((a,b) => b.bowlingRating - a.bowlingRating);
+    let alls = availableSquad.filter(p => p.role === 'All-Rounder').sort((a,b) => (b.battingRating+b.bowlingRating) - (a.battingRating+a.bowlingRating));
 
     let selected = [
       ...(wks.slice(0,1)),
@@ -97,15 +98,27 @@ const Tournament = () => {
     ];
     
     if (selected.length < 11) {
-      const remaining = squad.filter(p => !selected.find(s => s.id === p.id)).sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
+      const remaining = availableSquad.filter(p => !selected.find(s => s.id === p.id)).sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
       selected = [...selected, ...remaining.slice(0, 11 - selected.length)];
     }
     return selected;
   };
 
   const simulateInnings = (batting11, bowling11, battingCaptainId, bowlingCaptainId) => {
-    const getBatRating = (p) => p.id === battingCaptainId ? p.battingRating * 1.05 : p.battingRating;
-    const getBowlRating = (p) => p.id === bowlingCaptainId ? p.bowlingRating * 1.05 : p.bowlingRating;
+    const getBatRating = (p) => {
+      let rating = p.battingRating;
+      if (p.form === 'HOT') rating *= 1.1;
+      if (p.form === 'COLD') rating *= 0.9;
+      if (p.id === battingCaptainId) rating *= 1.05;
+      return Math.min(100, Math.floor(rating));
+    };
+    const getBowlRating = (p) => {
+      let rating = p.bowlingRating;
+      if (p.form === 'HOT') rating *= 1.1;
+      if (p.form === 'COLD') rating *= 0.9;
+      if (p.id === bowlingCaptainId) rating *= 1.05;
+      return Math.min(100, Math.floor(rating));
+    };
 
     const teamBatRatingAvg = batting11.slice(0, 7).reduce((acc, p) => acc + getBatRating(p), 0) / 7 || 1;
     const teamBowlRatingAvg = bowling11.filter(p => p.role === 'Bowler' || p.role === 'All-Rounder').slice(0, 5).reduce((acc, p) => acc + getBowlRating(p), 0) / 5 || 1;
@@ -277,6 +290,16 @@ const Tournament = () => {
   return (
     <div className="animate-fade-in" style={{ paddingBottom: '2rem' }}>
       
+      {/* Daily Buzz News Ticker */}
+      {state.newsItems && state.newsItems.length > 0 && (
+        <div style={{ background: 'var(--accent-gold)', color: 'black', padding: '0.5rem 1rem', display: 'flex', alignItems: 'center', fontWeight: 'bold', overflow: 'hidden', whiteSpace: 'nowrap', marginBottom: '2rem', borderRadius: '4px' }}>
+          <span style={{ marginRight: '1rem', background: 'black', color: 'var(--accent-gold)', padding: '2px 8px', borderRadius: '4px', fontSize: '0.8rem', textTransform: 'uppercase' }}>Daily Buzz</span>
+          <div style={{ display: 'inline-block', animation: 'marquee 30s linear infinite' }}>
+            {state.newsItems.join(' ••• ')}
+          </div>
+        </div>
+      )}
+
       {/* Next Match Banner */}
       {nextMatch ? (
         <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem', textAlign: 'center', background: 'linear-gradient(135deg, rgba(20,20,30,0.8), rgba(10,10,15,0.9))' }}>
@@ -561,16 +584,22 @@ const Tournament = () => {
                     style={{ 
                       padding: '1rem', 
                       borderRadius: '8px', 
-                      background: isSelected ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255,255,255,0.05)',
+                      background: player.injuredMatches > 0 ? 'rgba(239, 68, 68, 0.1)' : isSelected ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255,255,255,0.05)',
                       border: isCaptain ? '2px solid var(--accent-gold)' : isSelected ? '2px solid var(--accent-green)' : '2px solid transparent',
-                      cursor: 'pointer',
+                      cursor: player.injuredMatches > 0 ? 'not-allowed' : 'pointer',
                       transition: 'all 0.2s',
-                      position: 'relative'
+                      position: 'relative',
+                      opacity: player.injuredMatches > 0 ? 0.6 : 1
                     }}
                   >
-                    <div onClick={() => togglePlayerSelection(player)}>
+                    <div onClick={() => player.injuredMatches > 0 ? null : togglePlayerSelection(player)}>
                       <div style={{ fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
-                        <span>{player.name}</span>
+                        <span>
+                          {player.name}
+                          {player.form === 'HOT' && <span title="Hot Form" style={{marginLeft:'4px'}}>🔥</span>}
+                          {player.form === 'COLD' && <span title="Cold Form" style={{marginLeft:'4px'}}>❄️</span>}
+                          {player.injuredMatches > 0 && <span title={`Injured for ${player.injuredMatches} matches`} style={{marginLeft:'4px'}}>🚑</span>}
+                        </span>
                         {player.isOverseas && <span style={{ fontSize: '0.7rem', background: 'var(--accent-red)', padding: '2px 4px', borderRadius: '4px' }}>OS</span>}
                       </div>
                       <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{player.role} • {player.battingRating} BAT | {player.bowlingRating} BOWL</div>

@@ -65,7 +65,8 @@ const getInitialState = () => ({
   schedule: [],
   currentMatchIndex: 0,
   pointsTable: {},
-  tradeOffers: []
+  tradeOffers: [],
+  newsItems: []
 });
 
 export const GameContext = createContext();
@@ -225,6 +226,10 @@ const gameReducer = (state, action) => {
     case 'UPDATE_STATS': {
       const newStats = { ...state.tournamentStats };
       const { playerPerformances } = action.payload;
+      let newNews = [...(state.newsItems || [])];
+      
+      // Deep copy teams to update form and injuries
+      const updatedTeams = state.teams.map(t => ({ ...t, squad: [...t.squad] }));
       
       playerPerformances.forEach(perf => {
         const id = perf.player.id;
@@ -242,11 +247,57 @@ const gameReducer = (state, action) => {
         if (perf.runs > newStats[id].highestScore) {
           newStats[id].highestScore = perf.runs;
         }
+
+        // Apply Form and Injuries to squad members
+        updatedTeams.forEach(t => {
+           const pIdx = t.squad.findIndex(p => p.id === id);
+           if (pIdx !== -1) {
+              const p = t.squad[pIdx];
+              let newForm = p.form || 'NORMAL';
+              
+              if (perf.runs > 50 || perf.wickets >= 3) {
+                 newForm = 'HOT';
+                 if (Math.random() > 0.5) newNews.unshift(`🔥 ${p.name} is on fire! Phenomenal performance for ${t.shortName}.`);
+              } else if (perf.runs === 0 || perf.runsConceded > 45) {
+                 newForm = 'COLD';
+              } else {
+                 newForm = 'NORMAL';
+              }
+              
+              let newInjuredMatches = p.injuredMatches || 0;
+              
+              // 2% chance of injury per match played
+              if (Math.random() < 0.02 && newInjuredMatches === 0) {
+                 newInjuredMatches = Math.floor(Math.random() * 3) + 1;
+                 newNews.unshift(`🚑 BREAKING: ${p.name} (${t.shortName}) suffers an injury during play! Out for ${newInjuredMatches} matches.`);
+              }
+
+              t.squad[pIdx] = { ...p, form: newForm, injuredMatches: newInjuredMatches };
+           }
+        });
       });
+
+      // Heal non-playing injured players
+      updatedTeams.forEach(t => {
+         t.squad.forEach((p, pIdx) => {
+            const played = playerPerformances.find(perf => perf.player.id === p.id);
+            if (!played && p.injuredMatches > 0) {
+               const newInjuredMatches = p.injuredMatches - 1;
+               t.squad[pIdx] = { ...p, injuredMatches: newInjuredMatches };
+               if (newInjuredMatches === 0) {
+                  newNews.unshift(`💪 GOOD NEWS: ${p.name} has recovered from injury and is available for selection.`);
+               }
+            }
+         });
+      });
+
+      if (newNews.length > 30) newNews = newNews.slice(0, 30);
 
       return {
         ...state,
-        tournamentStats: newStats
+        tournamentStats: newStats,
+        teams: updatedTeams,
+        newsItems: newNews
       };
     }
 
