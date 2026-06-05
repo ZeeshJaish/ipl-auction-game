@@ -7,12 +7,6 @@ const AuctionRoom = () => {
   const { state, placeBid, sellPlayer, nextPlayer } = useContext(GameContext);
   useAIBidding(state, placeBid);
 
-  const logEndRef = useRef(null);
-
-  useEffect(() => {
-    logEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [state.biddingState.log]);
-
   if (!state.userTeam) {
     return <div style={{ textAlign: 'center', marginTop: '5rem' }}>Please select a team from the Dashboard first.</div>;
   }
@@ -96,45 +90,47 @@ const AuctionRoom = () => {
         )}
 
         {/* Bidding Console */}
-        <div className="glass-panel bidding-console" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <div style={{ color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Bid</div>
-            <div style={{ fontSize: '3rem', fontWeight: 'bold', color: currentBidder === userTeam ? 'var(--accent-green)' : 'white' }}>
-              ₹{(currentBid / 10000000).toFixed(2)} Cr
-            </div>
-            {currentBidder && (
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-gold)' }}>
-                <Star size={16} /> Highest Bidder: {teams.find(t => t.id === currentBidder)?.shortName}
+        <div className="bidding-console-wrapper">
+          <div className="glass-panel bidding-console" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className="bidding-console-info">
+              <div style={{ color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Bid</div>
+              <div style={{ fontSize: '3rem', fontWeight: 'bold', color: currentBidder === userTeam ? 'var(--accent-green)' : 'white' }}>
+                ₹{(currentBid / 10000000).toFixed(2)} Cr
               </div>
-            )}
-          </div>
-          
-          <div className="bidding-console-buttons" style={{ display: 'flex', gap: '1rem' }}>
-            <button 
-              className="glass-btn primary" 
-              style={{ fontSize: '1.2rem', padding: '15px 30px' }}
-              onClick={handleUserBid}
-              disabled={!biddingActive || currentBidder === userTeam || (currentBid + 2500000) > myTeam.purse}
-            >
-              <Gavel style={{ marginRight: '8px' }} size={20} /> Place Bid
-            </button>
-            <button 
-              className="glass-btn" 
-              style={{ fontSize: '1.2rem', padding: '15px 30px', background: 'rgba(239, 68, 68, 0.2)', borderColor: 'var(--accent-red)' }}
-              onClick={sellPlayer}
-              disabled={!biddingActive}
-            >
-              Sell / Pass
-            </button>
-            {!biddingActive && (
+              {currentBidder && (
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-gold)' }}>
+                  <Star size={16} /> Highest Bidder: {teams.find(t => t.id === currentBidder)?.shortName}
+                </div>
+              )}
+            </div>
+            
+            <div className="bidding-console-buttons" style={{ display: 'flex', gap: '1rem' }}>
               <button 
-                className="glass-btn gold" 
+                className="glass-btn primary" 
                 style={{ fontSize: '1.2rem', padding: '15px 30px' }}
-                onClick={nextPlayer}
+                onClick={handleUserBid}
+                disabled={!biddingActive || currentBidder === userTeam || (currentBid + 2500000) > myTeam.purse}
               >
-                Next Player
+                <Gavel style={{ marginRight: '8px' }} size={20} /> Place Bid
               </button>
-            )}
+              <button 
+                className="glass-btn" 
+                style={{ fontSize: '1.2rem', padding: '15px 30px', background: 'rgba(239, 68, 68, 0.2)', borderColor: 'var(--accent-red)' }}
+                onClick={sellPlayer}
+                disabled={!biddingActive}
+              >
+                Sell / Pass
+              </button>
+              {!biddingActive && (
+                <button 
+                  className="glass-btn gold" 
+                  style={{ fontSize: '1.2rem', padding: '15px 30px' }}
+                  onClick={nextPlayer}
+                >
+                  Next Player
+                </button>
+              )}
+            </div>
           </div>
         </div>
 
@@ -145,8 +141,7 @@ const AuctionRoom = () => {
         
         <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '400px' }}>
           <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem' }}>Live Activity</h3>
-          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column-reverse', gap: '0.5rem' }}>
-            <div ref={logEndRef} />
+          <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {log.map((entry, i) => (
               <div key={i} style={{ 
                 padding: '0.8rem', 
