@@ -446,42 +446,20 @@ const gameReducer = (state, action) => {
         purpleCap: purpleCapPlayer ? `${purpleCapPlayer.name} (${purpleCapPlayer.wickets} wkts)` : null
       }];
 
-      // 2. Age players, check retirements, and reset form/injuries
+      // 2. Reset form/injuries (Aging and retirement removed per user request)
       let currentAvailablePlayers = [...state.availablePlayers];
       
       const updatePlayerStats = (player) => {
         let p = { ...player };
-        p.age = (p.age || 25) + 1;
         p.form = 'NORMAL';
         p.injuredMatches = 0;
-
-        // Growth/Decline logic
-        if (p.age < 25) {
-           p.battingRating += Math.floor(Math.random() * 3);
-           p.bowlingRating += Math.floor(Math.random() * 3);
-        } else if (p.age > 34) {
-           p.battingRating -= Math.floor(Math.random() * 3);
-           p.bowlingRating -= Math.floor(Math.random() * 3);
-        }
-        
-        // Cap ratings
-        p.battingRating = Math.min(100, Math.max(50, p.battingRating));
-        p.bowlingRating = Math.min(100, Math.max(50, p.bowlingRating));
-        
         return p;
       };
 
-      currentAvailablePlayers = currentAvailablePlayers.map(updatePlayerStats)
-        .filter(p => !(p.age > 38 && Math.random() < 0.5)); // 50% chance to retire if > 38
+      currentAvailablePlayers = currentAvailablePlayers.map(updatePlayerStats);
 
       const updatedTeams = state.teams.map(t => {
-        const agedSquad = t.squad.map(updatePlayerStats).filter(p => {
-          const retire = p.age > 38 && Math.random() < 0.5;
-          if (retire && p.id === action.payload.captainId) {
-             // Handle captain retirement silently
-          }
-          return !retire;
-        });
+        const agedSquad = t.squad.map(updatePlayerStats);
 
         // AI Retentions: Keep top 4 rated players
         let retained = [];
