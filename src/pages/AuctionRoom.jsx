@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import { GameContext } from '../context/GameContext';
 import { useAIBidding } from '../hooks/useAIBidding';
-import { Gavel, User, DollarSign, TrendingUp, TrendingDown, Star } from 'lucide-react';
+import { Gavel, User, DollarSign, TrendingUp, TrendingDown, Star, Zap } from 'lucide-react';
 
 const AuctionRoom = () => {
   const { state, placeBid, sellPlayer, nextPlayer, forceSell } = useContext(GameContext);
@@ -15,6 +15,34 @@ const AuctionRoom = () => {
   const { currentBid, currentBidder, biddingActive, log } = biddingState;
 
   const myTeam = teams.find(t => t.id === userTeam);
+
+  const [showRtmModal, setShowRtmModal] = useState(false);
+  const [rtmData, setRtmData] = useState(null);
+
+  const handleSellPlayer = () => {
+    if (!biddingActive || !currentPlayer) return;
+
+    const homeTeamId = currentPlayer.homeTeamId;
+    const isHomeTeamHighestBidder = currentBidder === homeTeamId;
+    const homeTeam = homeTeamId ? teams.find(t => t.id === homeTeamId) : null;
+
+    if (homeTeam && !isHomeTeamHighestBidder && currentBidder && homeTeam.rtmCards > 0 && homeTeam.purse >= currentBid) {
+      if (homeTeamId === userTeam) {
+        // Show RTM Modal for User
+        setRtmData({ homeTeamId });
+        setShowRtmModal(true);
+      } else {
+        // AI Decision: 50% chance if they have funds
+        if (Math.random() > 0.5) {
+          sellPlayer(homeTeamId); // AI uses RTM
+        } else {
+          sellPlayer(); // AI passes
+        }
+      }
+    } else {
+      sellPlayer();
+    }
+  };
 
   const handleUserBid = () => {
     if (!biddingActive || !currentPlayer) return;
@@ -105,9 +133,14 @@ const AuctionRoom = () => {
                       {currentPlayer.name}
                     </h2>
                     <p style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>{currentPlayer.role} • {currentPlayer.country}</p>
-                    <div style={{ display: 'inline-block', marginTop: '0.5rem', background: 'rgba(251, 191, 36, 0.2)', color: 'var(--accent-gold)', padding: '4px 12px', borderRadius: '4px', fontSize: '0.9rem', border: '1px solid var(--accent-gold)' }}>
+                    <div style={{ display: 'inline-block', marginTop: '0.5rem', background: 'rgba(251, 191, 36, 0.2)', color: 'var(--accent-gold)', padding: '4px 12px', borderRadius: '4px', fontSize: '0.9rem', border: '1px solid var(--accent-gold)', marginRight: '10px' }}>
                       Set: {currentPlayer.poolName}
                     </div>
+                    {currentPlayer.homeTeamId && (
+                      <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '0.5rem', background: 'rgba(139, 92, 246, 0.2)', color: '#c4b5fd', padding: '4px 12px', borderRadius: '4px', fontSize: '0.9rem', border: '1px solid #8b5cf6' }}>
+                        <Zap size={14} /> Ex-Franchise: {teams.find(t => t.id === currentPlayer.homeTeamId)?.shortName}
+                      </div>
+                    )}
                   </div>
                   <div style={{ textAlign: 'right', background: 'rgba(0,0,0,0.3)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Base Price</div>
@@ -174,7 +207,7 @@ const AuctionRoom = () => {
               <button 
                 className="glass-btn" 
                 style={{ fontSize: '1.2rem', padding: '15px 30px', background: 'rgba(239, 68, 68, 0.2)', borderColor: 'var(--accent-red)' }}
-                onClick={sellPlayer}
+                onClick={handleSellPlayer}
                 disabled={!biddingActive}
               >
                 Sell / Pass
@@ -246,13 +279,66 @@ const AuctionRoom = () => {
                   <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: t.color }}></div>
                   <span style={{ fontWeight: t.id === userTeam ? 'bold' : 'normal' }}>{t.shortName}</span>
                 </div>
-                <div style={{ fontFamily: 'monospace', fontSize: '1rem' }}>₹{(t.purse / 10000000).toFixed(2)}</div>
+                <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                  {t.rtmCards > 0 && <span style={{ fontSize: '0.8rem', color: '#c4b5fd', background: 'rgba(139, 92, 246, 0.2)', padding: '2px 6px', borderRadius: '4px' }}>RTM: {t.rtmCards}</span>}
+                  <span style={{ fontFamily: 'monospace', fontSize: '1rem' }}>₹{(t.purse / 10000000).toFixed(2)}</span>
+                </div>
               </div>
             ))}
           </div>
         </div>
 
       </div>
+
+      {/* RTM Modal */}
+      {showRtmModal && rtmData && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.85)', backdropFilter: 'blur(15px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '600px', padding: '3rem', position: 'relative', border: '2px solid #8b5cf6', background: 'linear-gradient(to bottom, rgba(30, 20, 50, 0.9), rgba(15, 10, 30, 0.95))', boxShadow: '0 0 50px rgba(139, 92, 246, 0.3)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1.5rem' }}>
+              <Zap size={40} color="#c4b5fd" />
+              <h2 style={{ fontSize: '2.5rem', margin: 0, color: '#c4b5fd', textTransform: 'uppercase', letterSpacing: '2px' }}>RTM Opportunity!</h2>
+            </div>
+            
+            <div style={{ textAlign: 'center', marginBottom: '3rem' }}>
+              <p style={{ fontSize: '1.3rem', color: 'white', marginBottom: '1rem' }}>
+                <strong style={{ color: 'var(--accent-gold)' }}>{currentPlayer.name}</strong> was just sold to <strong>{teams.find(t => t.id === currentBidder)?.name}</strong> for <strong style={{ color: 'var(--accent-green)' }}>₹{(currentBid / 10000000).toFixed(2)} Cr</strong>.
+              </p>
+              <p style={{ color: 'var(--text-secondary)', fontSize: '1.1rem' }}>
+                As their former franchise, you can exercise your Right to Match (RTM) card to instantly buy them back at this exact price.
+              </p>
+              <div style={{ marginTop: '1.5rem', display: 'inline-block', background: 'rgba(0,0,0,0.4)', padding: '1rem 2rem', borderRadius: '8px' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Your RTM Cards Remaining: </span>
+                <strong style={{ color: '#c4b5fd', fontSize: '1.5rem', marginLeft: '0.5rem' }}>{myTeam.rtmCards}</strong>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+              <button 
+                className="glass-btn" 
+                style={{ fontSize: '1.2rem', padding: '15px 30px', flex: 1 }}
+                onClick={() => {
+                  setShowRtmModal(false);
+                  sellPlayer(); // Finalize to the highest bidder
+                }}
+              >
+                Pass (Let them go)
+              </button>
+              <button 
+                className="glass-btn primary" 
+                style={{ fontSize: '1.2rem', padding: '15px 30px', flex: 1, background: 'linear-gradient(to right, #8b5cf6, #6d28d9)', borderColor: '#8b5cf6', color: 'white' }}
+                onClick={() => {
+                  setShowRtmModal(false);
+                  sellPlayer(userTeam); // Steal them back
+                }}
+              >
+                <Zap size={20} style={{ marginRight: '8px', display: 'inline-block', verticalAlign: 'middle' }} />
+                Use RTM Card
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 };

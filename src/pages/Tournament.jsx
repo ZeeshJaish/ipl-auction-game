@@ -3,7 +3,7 @@ import { GameContext } from '../context/GameContext';
 import { Play, Trophy, Award, User, Calendar, Table, FastForward } from 'lucide-react';
 
 const Tournament = () => {
-  const { state, updateStats, generateSchedule, processMatchResult, appendMatches } = useContext(GameContext);
+  const { state, updateStats, generateSchedule, processMatchResult, appendMatches, acceptTrade, rejectTrade } = useContext(GameContext);
   const [activeTab, setActiveTab] = useState('STANDINGS');
   const [matchResult, setMatchResult] = useState(null);
   
@@ -77,7 +77,8 @@ const Tournament = () => {
   if (!state.userTeam) {
     return <div style={{ textAlign: 'center', marginTop: '5rem' }}>Please select a team from the Dashboard first.</div>;
   }
-
+  
+  // STANDINGS, FIXTURES, STATS, TRADE
   const myTeam = state.teams.find(t => t.id === state.userTeam);
   const nextMatch = state.schedule[state.currentMatchIndex];
   const isPlayoffs = state.currentMatchIndex >= 45; // Assuming 45 group matches
@@ -317,6 +318,14 @@ const Tournament = () => {
         <button className={`glass-btn ${activeTab === 'STATS' ? 'primary' : ''}`} onClick={() => setActiveTab('STATS')} style={{ padding: '8px 16px', fontSize: '0.9rem' }}>
           <Award size={16} style={{ marginRight: '8px' }} /> Top Performers
         </button>
+        <button className={`glass-btn ${activeTab === 'TRADE' ? 'primary gold' : ''}`} onClick={() => setActiveTab('TRADE')} style={{ padding: '8px 16px', fontSize: '0.9rem', position: 'relative' }}>
+          Trade Hub
+          {state.tradeOffers?.length > 0 && (
+            <span style={{ position: 'absolute', top: '-5px', right: '-5px', background: 'var(--accent-red)', color: 'white', fontSize: '0.7rem', padding: '2px 6px', borderRadius: '10px' }}>
+              {state.tradeOffers.length}
+            </span>
+          )}
+        </button>
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
@@ -416,6 +425,68 @@ const Tournament = () => {
                 ))}
               </div>
             </div>
+          </div>
+        )}
+
+        {activeTab === 'TRADE' && (
+          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 style={{ marginBottom: '1.5rem', color: 'var(--accent-gold)' }}>Mid-Season Trade Offers</h3>
+            {(!state.tradeOffers || state.tradeOffers.length === 0) ? (
+              <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '3rem' }}>
+                No active trade offers from other franchises at the moment. Keep playing matches!
+              </div>
+            ) : (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                {state.tradeOffers.map(trade => {
+                  const fromTeam = state.teams.find(t => t.id === trade.fromTeamId);
+                  const playerOffered = fromTeam.squad.find(p => p.id === trade.playerOffered);
+                  const playerRequested = myTeam.squad.find(p => p.id === trade.playerRequested);
+                  
+                  if (!playerOffered || !playerRequested) return null; // Safety check
+                  
+                  return (
+                    <div key={trade.id} className="animate-fade-in" style={{ border: '1px solid var(--glass-border)', padding: '1.5rem', borderRadius: '12px', background: 'rgba(255,255,255,0.02)' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem', borderBottom: '1px dashed rgba(255,255,255,0.1)', paddingBottom: '1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                          <div style={{ width: '16px', height: '16px', borderRadius: '50%', background: fromTeam.color }}></div>
+                          <span style={{ fontWeight: 'bold', fontSize: '1.2rem' }}>{fromTeam.name}</span>
+                          <span style={{ color: 'var(--text-secondary)' }}> proposes a trade</span>
+                        </div>
+                        <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>Trade ID: {trade.id.substring(0, 10)}</div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'space-around', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+                        {/* They Give */}
+                        <div style={{ flex: 1, minWidth: '250px', background: 'rgba(34, 197, 94, 0.1)', border: '1px solid rgba(34, 197, 94, 0.2)', padding: '1.5rem', borderRadius: '8px' }}>
+                          <div style={{ color: 'var(--accent-green)', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1rem' }}>You Receive</div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '0.5rem' }}>{playerOffered.name}</div>
+                          <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{playerOffered.role} • {playerOffered.battingRating} BAT | {playerOffered.bowlingRating} BOWL</div>
+                          {trade.cashOffered > 0 && (
+                            <div style={{ marginTop: '1rem', fontWeight: 'bold', color: 'var(--accent-green)' }}>+ ₹{(trade.cashOffered / 10000000).toFixed(2)} Cr</div>
+                          )}
+                        </div>
+
+                        <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.5)', borderRadius: '50%' }}>
+                          ⇄
+                        </div>
+
+                        {/* They Want */}
+                        <div style={{ flex: 1, minWidth: '250px', background: 'rgba(239, 68, 68, 0.1)', border: '1px solid rgba(239, 68, 68, 0.2)', padding: '1.5rem', borderRadius: '8px' }}>
+                          <div style={{ color: 'var(--accent-red)', textTransform: 'uppercase', fontSize: '0.8rem', fontWeight: 'bold', marginBottom: '1rem' }}>You Send</div>
+                          <div style={{ fontWeight: 'bold', fontSize: '1.2rem', marginBottom: '0.5rem' }}>{playerRequested.name}</div>
+                          <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)' }}>{playerRequested.role} • {playerRequested.battingRating} BAT | {playerRequested.bowlingRating} BOWL</div>
+                        </div>
+                      </div>
+
+                      <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '1rem', marginTop: '1.5rem' }}>
+                        <button className="glass-btn" style={{ borderColor: 'var(--accent-red)', color: 'var(--accent-red)' }} onClick={() => rejectTrade(trade.id)}>Reject Offer</button>
+                        <button className="glass-btn primary" style={{ background: 'var(--accent-green)', borderColor: 'var(--accent-green)' }} onClick={() => acceptTrade(trade.id)}>Accept Trade</button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         )}
 

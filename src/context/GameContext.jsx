@@ -17,19 +17,24 @@ const generateAuctionQueue = (players) => {
   let batsmen = [];
   let allrounders = [];
   let wicketkeepers = [];
-  let bowlers = [];
   let uncapped = [];
 
+  const teamIds = initialTeams.map(t => t.id);
+
   players.forEach(p => {
+    // Give ~30% of players a historical home team for RTM drama
+    const homeTeamId = Math.random() < 0.3 ? teamIds[Math.floor(Math.random() * teamIds.length)] : null;
+    const playerWithHome = { ...p, homeTeamId };
+
     if (p.basePrice < 5000000) {
-      uncapped.push({ ...p, poolName: 'Uncapped Players' });
+      uncapped.push({ ...playerWithHome, poolName: 'Uncapped Players' });
     } else if (p.basePrice >= 15000000) {
-      marquee.push({ ...p, poolName: 'Marquee Players' });
+      marquee.push({ ...playerWithHome, poolName: 'Marquee Players' });
     } else {
-      if (p.role === 'Batsman') batsmen.push({ ...p, poolName: 'Capped Batsmen' });
-      else if (p.role === 'All-Rounder') allrounders.push({ ...p, poolName: 'Capped All-Rounders' });
-      else if (p.role === 'Wicket-Keeper') wicketkeepers.push({ ...p, poolName: 'Capped Wicket-Keepers' });
-      else bowlers.push({ ...p, poolName: 'Capped Bowlers' });
+      if (p.role === 'Batsman') batsmen.push({ ...playerWithHome, poolName: 'Capped Batsmen' });
+      else if (p.role === 'All-Rounder') allrounders.push({ ...playerWithHome, poolName: 'Capped All-Rounders' });
+      else if (p.role === 'Wicket-Keeper') wicketkeepers.push({ ...playerWithHome, poolName: 'Capped Wicket-Keepers' });
+      else bowlers.push({ ...playerWithHome, poolName: 'Capped Bowlers' });
     }
   });
 
@@ -46,7 +51,7 @@ const generateAuctionQueue = (players) => {
 const getInitialState = () => ({
   activeSlot: null,
   userTeam: null,
-  teams: initialTeams.map(t => ({ ...t, squad: [] })),
+  teams: initialTeams.map(t => ({ ...t, squad: [], rtmCards: 2 })),
   auctionQueue: generateAuctionQueue([...initialPlayers]),
   currentPlayer: null,
   biddingState: {
@@ -59,7 +64,8 @@ const getInitialState = () => ({
   tournamentStats: {},
   schedule: [],
   currentMatchIndex: 0,
-  pointsTable: {}
+  pointsTable: {},
+  tradeOffers: []
 });
 
 export const GameContext = createContext();
@@ -93,7 +99,8 @@ const gameReducer = (state, action) => {
         color: action.payload.color,
         secondaryColor: action.payload.secondaryColor,
         purse: 1000000000,
-        squad: []
+        squad: [],
+        rtmCards: 2
       };
       
       // Replace the last team in the list with the custom team to keep it at 10 teams
@@ -137,8 +144,9 @@ const gameReducer = (state, action) => {
         }
       };
 
-    case 'SELL_PLAYER':
+    case 'SELL_PLAYER': {
       const { currentBidder, currentBid } = state.biddingState;
+      const { rtmTeamId } = action.payload || {};
       
       if (!currentBidder) {
         return {
@@ -151,12 +159,16 @@ const gameReducer = (state, action) => {
         };
       }
 
+      // If RTM was used, sell to the home team instead and deduct their RTM card
+      const finalBidderId = rtmTeamId || currentBidder;
+
       const updatedTeams = state.teams.map(t => {
-        if (t.id === currentBidder) {
+        if (t.id === finalBidderId) {
           return {
             ...t,
             purse: t.purse - currentBid,
-            squad: [...t.squad, { ...state.currentPlayer, boughtFor: currentBid }]
+            squad: [...t.squad, { ...state.currentPlayer, boughtFor: currentBid }],
+            rtmCards: rtmTeamId === t.id ? t.rtmCards - 1 : t.rtmCards
           };
         }
         return t;
@@ -168,9 +180,10 @@ const gameReducer = (state, action) => {
         biddingState: {
           ...state.biddingState,
           biddingActive: false,
-          log: [`SOLD! ${state.currentPlayer.name} to ${state.teams.find(t => t.id === currentBidder).shortName} for ₹${(currentBid / 10000000).toFixed(2)} Cr`, ...state.biddingState.log]
+          log: [rtmTeamId ? `🚨 RTM EXERCISED! ${state.currentPlayer.name} stolen back by ${state.teams.find(t => t.id === finalBidderId).shortName} at ₹${(currentBid / 10000000).toFixed(2)} Cr!` : `SOLD! ${state.currentPlayer.name} to ${state.teams.find(t => t.id === finalBidderId).shortName} for ₹${(currentBid / 10000000).toFixed(2)} Cr`, ...state.biddingState.log]
         }
       };
+    }
 
     case 'FORCE_SELL': {
       const { teamId, amount } = action.payload;
@@ -261,40 +274,101 @@ const gameReducer = (state, action) => {
     }
 
     case 'PROCESS_MATCH_RESULT': {
-      const { winnerId, loserId, isTie, team1Runs, team2Runs } = action.payload;
-      const newPoints = { ...state.pointsTable };
+      const { winnerId, loserId, isTie, resultStr } = action.payload;
       
-      const updateTeam = (id, won, lost, tied, runsScored, runsConceded) => {
-        const p = newPoints[id];
-        p.played += 1;
-        p.won += won;
-        p.lost += lost;
-        p.tied += tied;
-        p.points += (won * 2) + (tied * 1);
-        p.runDiff += (runsScored - runsConceded);
-        p.nrr = (p.runDiff / (p.played * 20)).toFixed(3);
-      };
+      const newPts = { ...state.pointsTable };
+      [winnerId, loserId].forEach(id => {
+        if (!newPts[id]) newPts[id] = { played: 0, won: 0, lost: 0, tied: 0, points: 0, nrr: 0 };
+        newPts[id].played += 1;
+      });
 
       if (isTie) {
-        updateTeam(winnerId, 0, 0, 1, team1Runs, team2Runs);
-        updateTeam(loserId, 0, 0, 1, team2Runs, team1Runs);
+        newPts[winnerId].tied += 1;
+        newPts[loserId].tied += 1;
+        newPts[winnerId].points += 1;
+        newPts[loserId].points += 1;
       } else {
-        updateTeam(winnerId, 1, 0, 0, Math.max(team1Runs, team2Runs), Math.min(team1Runs, team2Runs));
-        updateTeam(loserId, 0, 1, 0, Math.min(team1Runs, team2Runs), Math.max(team1Runs, team2Runs));
+        newPts[winnerId].won += 1;
+        newPts[loserId].lost += 1;
+        newPts[winnerId].points += 2;
+        // Simple NRR mock
+        newPts[winnerId].nrr += 0.5;
+        newPts[loserId].nrr -= 0.5;
       }
 
       const newSchedule = [...state.schedule];
       newSchedule[state.currentMatchIndex] = {
         ...newSchedule[state.currentMatchIndex],
-        completed: true,
-        resultStr: action.payload.resultStr
+        resultStr
       };
+
+      // Randomly generate a trade offer every 2 matches (30% chance)
+      let newTradeOffers = [...(state.tradeOffers || [])];
+      if (state.userTeam && Math.random() < 0.3) {
+        const userSquad = state.teams.find(t => t.id === state.userTeam).squad;
+        const aiTeams = state.teams.filter(t => t.id !== state.userTeam);
+        const randomAiTeam = aiTeams[Math.floor(Math.random() * aiTeams.length)];
+        
+        if (userSquad.length > 0 && randomAiTeam.squad.length > 0) {
+          const userPlayer = userSquad[Math.floor(Math.random() * userSquad.length)];
+          const aiPlayer = randomAiTeam.squad[Math.floor(Math.random() * randomAiTeam.squad.length)];
+          
+          // AI wants a highly rated player, offers a bench player + cash
+          const cashOffered = Math.floor(Math.random() * 500) * 100000; // Random cash between 0 and 5 Cr
+          
+          newTradeOffers.push({
+            id: `trade_${Date.now()}`,
+            fromTeamId: randomAiTeam.id,
+            toTeamId: state.userTeam,
+            playerOffered: aiPlayer.id,
+            playerRequested: userPlayer.id,
+            cashOffered: cashOffered
+          });
+        }
+      }
 
       return {
         ...state,
-        pointsTable: newPoints,
+        pointsTable: newPts,
         schedule: newSchedule,
-        currentMatchIndex: state.currentMatchIndex + 1
+        currentMatchIndex: state.currentMatchIndex + 1,
+        tradeOffers: newTradeOffers
+      };
+    }
+
+    case 'ACCEPT_TRADE': {
+      const tradeId = action.payload;
+      const trade = state.tradeOffers.find(t => t.id === tradeId);
+      if (!trade) return state;
+
+      const updatedTeams = state.teams.map(team => {
+        if (team.id === trade.toTeamId) { // User Team
+          return {
+            ...team,
+            purse: team.purse + trade.cashOffered,
+            squad: [...team.squad.filter(p => p.id !== trade.playerRequested), state.teams.find(t => t.id === trade.fromTeamId).squad.find(p => p.id === trade.playerOffered)]
+          };
+        } else if (team.id === trade.fromTeamId) { // AI Team
+          return {
+            ...team,
+            purse: team.purse - trade.cashOffered,
+            squad: [...team.squad.filter(p => p.id !== trade.playerOffered), state.teams.find(t => t.id === trade.toTeamId).squad.find(p => p.id === trade.playerRequested)]
+          };
+        }
+        return team;
+      });
+
+      return {
+        ...state,
+        teams: updatedTeams,
+        tradeOffers: state.tradeOffers.filter(t => t.id !== tradeId)
+      };
+    }
+
+    case 'REJECT_TRADE': {
+      return {
+        ...state,
+        tradeOffers: state.tradeOffers.filter(t => t.id !== action.payload)
       };
     }
 
@@ -329,13 +403,15 @@ export const GameProvider = ({ children }) => {
   const createCustomTeam = (payload) => dispatch({ type: 'CREATE_CUSTOM_TEAM', payload });
   const nextPlayer = () => dispatch({ type: 'NEXT_PLAYER' });
   const placeBid = (teamId, amount) => dispatch({ type: 'PLACE_BID', payload: { teamId, amount } });
-  const sellPlayer = () => dispatch({ type: 'SELL_PLAYER' });
+  const sellPlayer = (rtmTeamId = null) => dispatch({ type: 'SELL_PLAYER', payload: { rtmTeamId } });
   const setPurse = (teamId, amount) => dispatch({ type: 'SET_PURSE', payload: { teamId, amount } });
   const updateStats = (playerPerformances) => dispatch({ type: 'UPDATE_STATS', payload: { playerPerformances } });
   const generateSchedule = () => dispatch({ type: 'GENERATE_SCHEDULE' });
   const processMatchResult = (payload) => dispatch({ type: 'PROCESS_MATCH_RESULT', payload });
   const appendMatches = (matches) => dispatch({ type: 'APPEND_MATCHES', payload: matches });
   const forceSell = (teamId, amount) => dispatch({ type: 'FORCE_SELL', payload: { teamId, amount } });
+  const acceptTrade = (tradeId) => dispatch({ type: 'ACCEPT_TRADE', payload: tradeId });
+  const rejectTrade = (tradeId) => dispatch({ type: 'REJECT_TRADE', payload: tradeId });
 
   return (
     <GameContext.Provider value={{ 
@@ -352,7 +428,9 @@ export const GameProvider = ({ children }) => {
       generateSchedule, 
       processMatchResult, 
       appendMatches, 
-      forceSell 
+      forceSell,
+      acceptTrade,
+      rejectTrade
     }}>
       {children}
     </GameContext.Provider>
