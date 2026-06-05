@@ -17,9 +17,9 @@ const Dashboard = () => {
 
   return (
     <div className="animate-fade-in" style={{ textAlign: 'center', paddingTop: '2rem' }}>
-      <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1rem' }}>
+      <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
         <Trophy size={40} color="var(--accent-gold)" style={{ filter: 'drop-shadow(0 0 10px rgba(251,191,36,0.5))' }} />
-        <h1 style={{ fontSize: '3.5rem', background: 'linear-gradient(135deg, #ffffff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '2px' }}>
+        <h1 className="dashboard-hero-title" style={{ fontSize: '3.5rem', background: 'linear-gradient(135deg, #ffffff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '2px' }}>
           IPL Mega Auction
         </h1>
       </div>

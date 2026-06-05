@@ -241,16 +241,37 @@ h1, h2, h3, h4, h5, h6 {
   }
 
   .player-card-content {
-    flex-direction: column;
+    flex-direction: column !important;
     text-align: center;
+    padding: 1.5rem !important;
   }
 
   .player-card-content > div {
-    align-items: center;
+    align-items: center !important;
   }
   
+  /* Override inline text sizes for mobile */
+  h1, h2, div, p {
+    word-wrap: break-word;
+  }
+
   .player-card-content h2 {
     font-size: 2rem !important;
+  }
+  
+  .player-card-content .rating-container {
+    flex-direction: column !important;
+    gap: 1rem !important;
+  }
+  
+  .player-card-content > div > div > div:nth-child(2) {
+    text-align: center !important;
+    margin-top: 1rem;
+  }
+
+  /* Mobile Dashboard */
+  .dashboard-hero-title {
+    font-size: 2.2rem !important;
   }
 
   /* Sticky Bidding Console on Mobile */
@@ -262,42 +283,61 @@ h1, h2, h3, h4, h5, h6 {
     z-index: 1000;
     background: rgba(7, 9, 14, 0.95);
     backdrop-filter: blur(20px);
-    border-top: 1px solid var(--glass-border);
+    border-top: 2px solid var(--accent-gold);
     padding: 1rem;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
+    margin-top: 0 !important;
   }
 
   .bidding-console {
-    flex-direction: row !important;
+    flex-direction: column !important;
     gap: 1rem;
-    text-align: left;
+    text-align: center;
     padding: 0 !important;
-    border: none;
-    background: transparent;
-    box-shadow: none;
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
   }
 
   .bidding-console-info {
-    flex: 1;
+    width: 100%;
   }
 
-  .bidding-console-info h3 {
-    font-size: 1.5rem !important;
+  .bidding-console-info div:nth-child(2) {
+    font-size: 2.5rem !important;
   }
 
   .bidding-console-buttons {
-    flex-direction: column;
-    width: auto;
-    min-width: 120px;
+    flex-direction: row !important;
+    width: 100%;
+    justify-content: center;
+    flex-wrap: wrap;
   }
 
   .glass-btn {
-    width: 100%;
-    padding: 12px !important;
-    font-size: 1rem !important;
+    flex: 1;
+    min-width: 100px;
+    padding: 10px !important;
+    font-size: 0.9rem !important;
   }
 
   .auction-grid {
-    padding-bottom: 160px;
+    padding-bottom: 220px;
+  }
+  
+  /* Tournament Mobile Fixes */
+  .tournament-scorecard {
+    flex-direction: column !important;
+    text-align: center;
+    padding: 1.5rem !important;
+  }
+  
+  .tournament-scorecard > div:nth-child(2) {
+    margin: 1rem 0 !important;
+  }
+  
+  .playoff-bracket {
+    overflow-x: auto;
+    padding-bottom: 1rem;
   }
 }

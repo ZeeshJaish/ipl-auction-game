@@ -393,9 +393,9 @@ const Tournament = () => {
         {matchResult && (
           <div className="glass-panel" style={{ padding: '2rem', marginTop: '1rem' }}>
             <h3 style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>Latest Result: <span style={{ color: 'var(--accent-gold)' }}>{matchResult.resultStr}</span></h3>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '2rem' }}>
+            <div className="tournament-scorecard" style={{ display: 'flex', gap: '2rem', justifyContent: 'space-between' }}>
               {/* Innings 1 */}
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px', flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontWeight: 'bold' }}>
                   <span>{matchResult.inn1.team}</span>
                   <span>{matchResult.inn1.totalRuns}/{matchResult.inn1.totalWickets}</span>
@@ -406,7 +406,7 @@ const Tournament = () => {
                 </div>
               </div>
               {/* Innings 2 */}
-              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px' }}>
+              <div style={{ background: 'rgba(255,255,255,0.02)', padding: '1.5rem', borderRadius: '8px', flex: 1 }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '1rem', fontWeight: 'bold' }}>
                   <span>{matchResult.inn2.team}</span>
                   <span>{matchResult.inn2.totalRuns}/{matchResult.inn2.totalWickets}</span>

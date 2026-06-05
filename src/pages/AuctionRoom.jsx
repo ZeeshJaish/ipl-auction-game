@@ -112,7 +112,7 @@ const AuctionRoom = () => {
                   </div>
                 </div>
 
-                <div style={{ display: 'flex', gap: '2rem', marginTop: '3rem' }}>
+                <div className="rating-container" style={{ display: 'flex', gap: '2rem', marginTop: '3rem' }}>
                   <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '1.5rem', borderRadius: '12px', flex: 1 }}>
                     <div style={{ color: 'var(--accent-green)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>Batting Rating</div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '2rem', fontWeight: '800' }}>
