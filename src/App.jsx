@@ -8,6 +8,7 @@ import AuctionRoom from './pages/AuctionRoom';
 import SquadView from './pages/SquadView';
 import Tournament from './pages/Tournament';
 import Retentions from './pages/Retentions';
+import GodMode from './pages/GodMode';
 
 function App() {
   const { state, setPurse } = useContext(GameContext);
@@ -65,6 +66,7 @@ function App() {
           <Route path="/squad" element={<SquadView />} />
           <Route path="/tournament" element={<Tournament />} />
           <Route path="/retentions" element={<Retentions />} />
+          <Route path="/godmode" element={<GodMode />} />
         </Routes>
       </main>
     </div>

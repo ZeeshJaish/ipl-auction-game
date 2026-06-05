@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { GameContext } from '../context/GameContext';
 import { useAIBidding } from '../hooks/useAIBidding';
 import { Gavel, User, DollarSign, TrendingUp, TrendingDown, Star, Zap } from 'lucide-react';
 
 const AuctionRoom = () => {
+  const navigate = useNavigate();
   const { state, placeBid, sellPlayer, nextPlayer, forceSell } = useContext(GameContext);
   useAIBidding(state, placeBid);
 
@@ -66,6 +68,11 @@ const AuctionRoom = () => {
       if (roleCount > 4) baseValuation *= 0.5;
       if (roleCount < 2) baseValuation *= 1.5;
 
+      // Add Real Team Bias
+      if (currentPlayer.realTeamId === team.id) {
+        baseValuation *= 4.0;
+      }
+
       const overseasCount = team.squad.filter(p => p.isOverseas).length;
       if (currentPlayer.isOverseas && overseasCount >= 8) return; 
 
@@ -88,6 +95,16 @@ const AuctionRoom = () => {
       {/* Left Column: Player Card & Bidding */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         
+        <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '-1rem' }}>
+          <button 
+            className="glass-btn gold" 
+            style={{ padding: '8px 16px', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.9rem' }}
+            onClick={() => navigate('/godmode')}
+          >
+            <Zap size={16} /> Enter God Mode
+          </button>
+        </div>
+
         {currentPlayer ? (
           <div className="glass-panel-3d" style={{ perspective: '1000px' }}>
             <div className="glass-panel glass-panel-3d-inner player-card-content" style={{ padding: '3rem', display: 'flex', gap: '3rem', alignItems: 'center', background: 'linear-gradient(145deg, rgba(20,25,40,0.8), rgba(15,20,30,0.9))' }}>

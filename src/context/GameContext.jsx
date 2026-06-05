@@ -218,6 +218,78 @@ const gameReducer = (state, action) => {
       };
     }
 
+    case 'GOD_MODE_DRAFT': {
+      const { playerId, teamId } = action.payload;
+      const playerIndex = state.auctionQueue.findIndex(p => p.id === playerId);
+      if (playerIndex === -1) return state;
+      const player = state.auctionQueue[playerIndex];
+      
+      const updatedTeams = state.teams.map(t => {
+        if (t.id === teamId) {
+          return {
+            ...t,
+            purse: t.purse - player.basePrice,
+            squad: [...t.squad, { ...player, boughtFor: player.basePrice }]
+          };
+        }
+        return t;
+      });
+      
+      const newQueue = [...state.auctionQueue];
+      newQueue.splice(playerIndex, 1);
+      
+      return {
+        ...state,
+        teams: updatedTeams,
+        auctionQueue: newQueue
+      };
+    }
+
+    case 'AUTO_SIMULATE_AUCTION': {
+      let remainingPlayers = [...state.auctionQueue];
+      if (state.currentPlayer) {
+        remainingPlayers.push(state.currentPlayer);
+      }
+      
+      let newTeams = JSON.parse(JSON.stringify(state.teams));
+      
+      let i = 0;
+      let passes = 0;
+      while (remainingPlayers.length > 0 && passes < newTeams.length) {
+        let team = newTeams[i % newTeams.length];
+        
+        if (team.id === state.userTeam || team.squad.length >= 25 || team.purse < 20000000) {
+          passes++;
+          i++;
+          continue;
+        }
+
+        passes = 0; 
+        
+        let playerIndex = remainingPlayers.findIndex(p => p.realTeamId === team.id);
+        if (playerIndex === -1) playerIndex = 0;
+        
+        let p = remainingPlayers[playerIndex];
+        
+        if (team.purse >= p.basePrice) {
+          team.purse -= p.basePrice;
+          team.squad.push({ ...p, boughtFor: p.basePrice });
+          remainingPlayers.splice(playerIndex, 1);
+        } else {
+           passes++;
+        }
+        i++;
+      }
+      
+      return {
+        ...state,
+        teams: newTeams,
+        auctionQueue: [],
+        currentPlayer: null,
+        auctionPhase: 'TOURNAMENT'
+      };
+    }
+
     case 'SET_PURSE':
       return {
         ...state,
@@ -589,6 +661,8 @@ export const GameProvider = ({ children }) => {
   const nextPlayer = () => dispatch({ type: 'NEXT_PLAYER' });
   const placeBid = (teamId, amount) => dispatch({ type: 'PLACE_BID', payload: { teamId, amount } });
   const sellPlayer = (rtmTeamId = null) => dispatch({ type: 'SELL_PLAYER', payload: { rtmTeamId } });
+  const godModeDraft = (playerId, teamId) => dispatch({ type: 'GOD_MODE_DRAFT', payload: { playerId, teamId } });
+  const autoSimulateAuction = () => dispatch({ type: 'AUTO_SIMULATE_AUCTION' });
   const setPurse = (teamId, amount) => dispatch({ type: 'SET_PURSE', payload: { teamId, amount } });
   const updateStats = (playerPerformances) => dispatch({ type: 'UPDATE_STATS', payload: { playerPerformances } });
   const generateSchedule = () => dispatch({ type: 'GENERATE_SCHEDULE' });

@@ -39,6 +39,11 @@ export const useAIBidding = (state, placeBid) => {
         const roleCount = team.squad.filter(p => p.role === currentPlayer.role).length;
         if (roleCount > 4) baseValuation *= 0.5;
         if (roleCount < 2) baseValuation *= 1.5;
+        
+        // Add Real Team Bias
+        if (currentPlayer.realTeamId === team.id) {
+          baseValuation *= 4.0; // Massive boost so they fight heavily for their real players
+        }
 
         // Overseas limit check
         const overseasCount = team.squad.filter(p => p.isOverseas).length;

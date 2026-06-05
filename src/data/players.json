@@ -8,7 +8,8 @@
     "bowlingRating": 10,
     "id": 1,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Virat_Kohli_in_PMO_New_Delhi.jpg/330px-Virat_Kohli_in_PMO_New_Delhi.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9b/Virat_Kohli_in_PMO_New_Delhi.jpg/330px-Virat_Kohli_in_PMO_New_Delhi.jpg",
+    "realTeamId": "rcb"
   },
   {
     "name": "MS Dhoni",
@@ -19,7 +20,8 @@
     "bowlingRating": 5,
     "id": 2,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/MS_Dhoni_%28Prabhav_%2723_-_RiGI_2023%29.jpg/330px-MS_Dhoni_%28Prabhav_%2723_-_RiGI_2023%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/MS_Dhoni_%28Prabhav_%2723_-_RiGI_2023%29.jpg/330px-MS_Dhoni_%28Prabhav_%2723_-_RiGI_2023%29.jpg",
+    "realTeamId": "csk"
   },
   {
     "name": "Rohit Sharma",
@@ -30,7 +32,8 @@
     "bowlingRating": 10,
     "id": 3,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Shri_Rohit_Gurunath_Sharma_%28Cropped%29.jpg/330px-Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Shri_Rohit_Gurunath_Sharma_%28Cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Shri_Rohit_Gurunath_Sharma_%28Cropped%29.jpg/330px-Prime_Minister_Of_Bharat_Shri_Narendra_Damodardas_Modi_with_Shri_Rohit_Gurunath_Sharma_%28Cropped%29.jpg",
+    "realTeamId": "mi"
   },
   {
     "name": "Jasprit Bumrah",
@@ -41,7 +44,8 @@
     "bowlingRating": 97,
     "id": 4,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Jasprit_Bumrah_in_PMO_New_Delhi.jpg/330px-Jasprit_Bumrah_in_PMO_New_Delhi.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Jasprit_Bumrah_in_PMO_New_Delhi.jpg/330px-Jasprit_Bumrah_in_PMO_New_Delhi.jpg",
+    "realTeamId": "mi"
   },
   {
     "name": "Rashid Khan",
@@ -52,7 +56,8 @@
     "bowlingRating": 96,
     "id": 5,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Rashid_Khan.jpg/330px-Rashid_Khan.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/Rashid_Khan.jpg/330px-Rashid_Khan.jpg",
+    "realTeamId": "gt"
   },
   {
     "name": "Hardik Pandya",
@@ -63,7 +68,8 @@
     "bowlingRating": 82,
     "id": 6,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Hardik_Pandya_in_PMO_New_Delhi.jpg/330px-Hardik_Pandya_in_PMO_New_Delhi.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fc/Hardik_Pandya_in_PMO_New_Delhi.jpg/330px-Hardik_Pandya_in_PMO_New_Delhi.jpg",
+    "realTeamId": "mi"
   },
   {
     "name": "Suryakumar Yadav",
@@ -74,7 +80,8 @@
     "bowlingRating": 5,
     "id": 7,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Suryakumar_Yadav_in_PMO_New_Delhi.jpg/330px-Suryakumar_Yadav_in_PMO_New_Delhi.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b7/Suryakumar_Yadav_in_PMO_New_Delhi.jpg/330px-Suryakumar_Yadav_in_PMO_New_Delhi.jpg",
+    "realTeamId": "mi"
   },
   {
     "name": "Ben Stokes",
@@ -85,7 +92,8 @@
     "bowlingRating": 80,
     "id": 8,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/3_14_Captain_Ben_%28cropped%29_%28cropped%29.jpg/330px-3_14_Captain_Ben_%28cropped%29_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/3_14_Captain_Ben_%28cropped%29_%28cropped%29.jpg/330px-3_14_Captain_Ben_%28cropped%29_%28cropped%29.jpg",
+    "realTeamId": null
   },
   {
     "name": "Pat Cummins",
@@ -96,7 +104,8 @@
     "bowlingRating": 90,
     "id": 9,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Pat_Cummins_fielding_Ashes_2021_%28cropped%29.jpg/330px-Pat_Cummins_fielding_Ashes_2021_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Pat_Cummins_fielding_Ashes_2021_%28cropped%29.jpg/330px-Pat_Cummins_fielding_Ashes_2021_%28cropped%29.jpg",
+    "realTeamId": "srh"
   },
   {
     "name": "Glenn Maxwell",
@@ -107,7 +116,8 @@
     "bowlingRating": 70,
     "id": 10,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Glen_Maxwell_2026_%28cropped%29.jpg/330px-Glen_Maxwell_2026_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3d/Glen_Maxwell_2026_%28cropped%29.jpg/330px-Glen_Maxwell_2026_%28cropped%29.jpg",
+    "realTeamId": "rcb"
   },
   {
     "name": "Trent Boult",
@@ -118,7 +128,8 @@
     "bowlingRating": 91,
     "id": 11,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/2018.02.03.22.23.14-AUSvNZL_T20_AUS_innings%2C_SCG_%2839533156665%29.jpg/330px-2018.02.03.22.23.14-AUSvNZL_T20_AUS_innings%2C_SCG_%2839533156665%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/23/2018.02.03.22.23.14-AUSvNZL_T20_AUS_innings%2C_SCG_%2839533156665%29.jpg/330px-2018.02.03.22.23.14-AUSvNZL_T20_AUS_innings%2C_SCG_%2839533156665%29.jpg",
+    "realTeamId": "rr"
   },
   {
     "name": "KL Rahul",
@@ -129,7 +140,8 @@
     "bowlingRating": 5,
     "id": 12,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/6/69/KL_Rahul_at_Femina_Miss_India_2018_Grand_Finale_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/6/69/KL_Rahul_at_Femina_Miss_India_2018_Grand_Finale_%28cropped%29.jpg",
+    "realTeamId": "lsg"
   },
   {
     "name": "Rishabh Pant",
@@ -140,7 +152,8 @@
     "bowlingRating": 5,
     "id": 13,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Rishabh_Pant.jpg/330px-Rishabh_Pant.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Rishabh_Pant.jpg/330px-Rishabh_Pant.jpg",
+    "realTeamId": "dc"
   },
   {
     "name": "Ravindra Jadeja",
@@ -151,7 +164,8 @@
     "bowlingRating": 88,
     "id": 14,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/PM_Shri_Narendra_Modi_with_Ravindra_Jadeja_%28Cropped%29.jpg/330px-PM_Shri_Narendra_Modi_with_Ravindra_Jadeja_%28Cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/PM_Shri_Narendra_Modi_with_Ravindra_Jadeja_%28Cropped%29.jpg/330px-PM_Shri_Narendra_Modi_with_Ravindra_Jadeja_%28Cropped%29.jpg",
+    "realTeamId": "csk"
   },
   {
     "name": "Jos Buttler",
@@ -162,7 +176,8 @@
     "bowlingRating": 5,
     "id": 15,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Jos_Buttler_in_2023.jpg/330px-Jos_Buttler_in_2023.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/Jos_Buttler_in_2023.jpg/330px-Jos_Buttler_in_2023.jpg",
+    "realTeamId": "rr"
   },
   {
     "name": "David Warner",
@@ -173,7 +188,8 @@
     "bowlingRating": 5,
     "id": 16,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "name": "Shubman Gill",
@@ -184,7 +200,8 @@
     "bowlingRating": 5,
     "id": 17,
     "isOverseas": false,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Shubman_Gill_2023_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/3/34/Shubman_Gill_2023_%28cropped%29.jpg",
+    "realTeamId": "gt"
   },
   {
     "name": "Mitchell Starc",
@@ -195,7 +212,8 @@
     "bowlingRating": 93,
     "id": 18,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Mitchell_Starc_2023.jpg/330px-Mitchell_Starc_2023.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/Mitchell_Starc_2023.jpg/330px-Mitchell_Starc_2023.jpg",
+    "realTeamId": "kkr"
   },
   {
     "name": "Sam Curran",
@@ -206,7 +224,8 @@
     "bowlingRating": 82,
     "id": 19,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/The_Prime_Minister_welcomes_the_World_Cup_winning_cricketers_%2852764650104%29_-_Sam_Curran_%28cropped%29.jpg/330px-The_Prime_Minister_welcomes_the_World_Cup_winning_cricketers_%2852764650104%29_-_Sam_Curran_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/The_Prime_Minister_welcomes_the_World_Cup_winning_cricketers_%2852764650104%29_-_Sam_Curran_%28cropped%29.jpg/330px-The_Prime_Minister_welcomes_the_World_Cup_winning_cricketers_%2852764650104%29_-_Sam_Curran_%28cropped%29.jpg",
+    "realTeamId": "pbks"
   },
   {
     "name": "Kagiso Rabada",
@@ -217,7 +236,8 @@
     "bowlingRating": 90,
     "id": 20,
     "isOverseas": true,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kingdom_Kome_co-founders_Kagiso_Rabada_and_Cameron_Scott_at_the_first_private_screening_of_The_Ring_of_Beasts_%28cropped%29.jpg/330px-Kingdom_Kome_co-founders_Kagiso_Rabada_and_Cameron_Scott_at_the_first_private_screening_of_The_Ring_of_Beasts_%28cropped%29.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Kingdom_Kome_co-founders_Kagiso_Rabada_and_Cameron_Scott_at_the_first_private_screening_of_The_Ring_of_Beasts_%28cropped%29.jpg/330px-Kingdom_Kome_co-founders_Kagiso_Rabada_and_Cameron_Scott_at_the_first_private_screening_of_The_Ring_of_Beasts_%28cropped%29.jpg",
+    "realTeamId": "pbks"
   },
   {
     "name": "Faf du Plessis",
@@ -228,7 +248,8 @@
     "bowlingRating": 5,
     "id": 21,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "name": "Quinton de Kock",
@@ -239,7 +260,8 @@
     "bowlingRating": 5,
     "id": 22,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "name": "Sunil Narine",
@@ -250,7 +272,8 @@
     "bowlingRating": 89,
     "id": 23,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "name": "Andre Russell",
@@ -261,7 +284,8 @@
     "bowlingRating": 78,
     "id": 24,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "name": "Yuzvendra Chahal",
@@ -272,7 +296,8 @@
     "bowlingRating": 88,
     "id": 25,
     "isOverseas": false,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "name": "Mohammed Shami",
@@ -283,7 +308,8 @@
     "bowlingRating": 90,
     "id": 26,
     "isOverseas": false,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "name": "Heinrich Klaasen",
@@ -294,7 +320,8 @@
     "bowlingRating": 5,
     "id": 27,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "name": "Nicholas Pooran",
@@ -305,7 +332,8 @@
     "bowlingRating": 5,
     "id": 28,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "name": "Jofra Archer",
@@ -316,7 +344,8 @@
     "bowlingRating": 89,
     "id": 29,
     "isOverseas": true,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "name": "Sanju Samson",
@@ -327,7 +356,8 @@
     "bowlingRating": 5,
     "id": 30,
     "isOverseas": false,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 31,
@@ -338,7 +368,8 @@
     "basePrice": 2000000,
     "battingRating": 74,
     "bowlingRating": 24,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 32,
@@ -349,7 +380,8 @@
     "basePrice": 15000000,
     "battingRating": 66,
     "bowlingRating": 7,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 33,
@@ -360,7 +392,8 @@
     "basePrice": 2000000,
     "battingRating": 83,
     "bowlingRating": 18,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 34,
@@ -371,7 +404,8 @@
     "basePrice": 7500000,
     "battingRating": 60,
     "bowlingRating": 20,
-    "image": null
+    "image": null,
+    "realTeamId": "mi"
   },
   {
     "id": 35,
@@ -382,7 +416,8 @@
     "basePrice": 5000000,
     "battingRating": 69,
     "bowlingRating": 12,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 36,
@@ -393,7 +428,8 @@
     "basePrice": 2000000,
     "battingRating": 74,
     "bowlingRating": 6,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 37,
@@ -404,7 +440,8 @@
     "basePrice": 5000000,
     "battingRating": 60,
     "bowlingRating": 10,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 38,
@@ -415,7 +452,8 @@
     "basePrice": 7500000,
     "battingRating": 77,
     "bowlingRating": 7,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 39,
@@ -426,7 +464,8 @@
     "basePrice": 10000000,
     "battingRating": 70,
     "bowlingRating": 11,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 40,
@@ -437,7 +476,8 @@
     "basePrice": 10000000,
     "battingRating": 70,
     "bowlingRating": 15,
-    "image": null
+    "image": null,
+    "realTeamId": "mi"
   },
   {
     "id": 41,
@@ -448,7 +488,8 @@
     "basePrice": 10000000,
     "battingRating": 84,
     "bowlingRating": 14,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 42,
@@ -459,7 +500,8 @@
     "basePrice": 10000000,
     "battingRating": 75,
     "bowlingRating": 6,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 43,
@@ -470,7 +512,8 @@
     "basePrice": 10000000,
     "battingRating": 63,
     "bowlingRating": 12,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 44,
@@ -481,7 +524,8 @@
     "basePrice": 10000000,
     "battingRating": 76,
     "bowlingRating": 18,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 45,
@@ -492,7 +536,8 @@
     "basePrice": 7500000,
     "battingRating": 14,
     "bowlingRating": 60,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 46,
@@ -503,7 +548,8 @@
     "basePrice": 5000000,
     "battingRating": 8,
     "bowlingRating": 71,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 47,
@@ -514,7 +560,8 @@
     "basePrice": 20000000,
     "battingRating": 6,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 48,
@@ -525,7 +572,8 @@
     "basePrice": 5000000,
     "battingRating": 21,
     "bowlingRating": 71,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 49,
@@ -536,7 +584,8 @@
     "basePrice": 2000000,
     "battingRating": 64,
     "bowlingRating": 52,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 50,
@@ -547,7 +596,8 @@
     "basePrice": 2000000,
     "battingRating": 15,
     "bowlingRating": 66,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 51,
@@ -558,7 +608,8 @@
     "basePrice": 7500000,
     "battingRating": 31,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 52,
@@ -569,7 +620,8 @@
     "basePrice": 5000000,
     "battingRating": 29,
     "bowlingRating": 61,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 53,
@@ -580,7 +632,8 @@
     "basePrice": 15000000,
     "battingRating": 10,
     "bowlingRating": 73,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 54,
@@ -591,7 +644,8 @@
     "basePrice": 10000000,
     "battingRating": 19,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 55,
@@ -602,7 +656,8 @@
     "basePrice": 5000000,
     "battingRating": 27,
     "bowlingRating": 61,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "id": 56,
@@ -613,7 +668,8 @@
     "basePrice": 5000000,
     "battingRating": 12,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 57,
@@ -624,7 +680,8 @@
     "basePrice": 7500000,
     "battingRating": 60,
     "bowlingRating": 62,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 58,
@@ -635,7 +692,8 @@
     "basePrice": 7500000,
     "battingRating": 75,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 59,
@@ -646,7 +704,8 @@
     "basePrice": 7500000,
     "battingRating": 7,
     "bowlingRating": 84,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 60,
@@ -657,7 +716,8 @@
     "basePrice": 10000000,
     "battingRating": 28,
     "bowlingRating": 70,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 61,
@@ -668,7 +728,8 @@
     "basePrice": 5000000,
     "battingRating": 13,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 62,
@@ -679,7 +740,8 @@
     "basePrice": 7500000,
     "battingRating": 32,
     "bowlingRating": 62,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 63,
@@ -690,7 +752,8 @@
     "basePrice": 10000000,
     "battingRating": 25,
     "bowlingRating": 81,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 64,
@@ -701,7 +764,8 @@
     "basePrice": 5000000,
     "battingRating": 16,
     "bowlingRating": 64,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 65,
@@ -712,7 +776,8 @@
     "basePrice": 2000000,
     "battingRating": 55,
     "bowlingRating": 57,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "id": 66,
@@ -723,7 +788,8 @@
     "basePrice": 5000000,
     "battingRating": 66,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 67,
@@ -734,7 +800,8 @@
     "basePrice": 7500000,
     "battingRating": 77,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 68,
@@ -745,7 +812,8 @@
     "basePrice": 10000000,
     "battingRating": 52,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 69,
@@ -756,7 +824,8 @@
     "basePrice": 7500000,
     "battingRating": 50,
     "bowlingRating": 56,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 70,
@@ -767,7 +836,8 @@
     "basePrice": 10000000,
     "battingRating": 58,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 71,
@@ -778,7 +848,8 @@
     "basePrice": 15000000,
     "battingRating": 68,
     "bowlingRating": 5,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 72,
@@ -789,7 +860,8 @@
     "basePrice": 10000000,
     "battingRating": 71,
     "bowlingRating": 21,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 73,
@@ -800,7 +872,8 @@
     "basePrice": 7500000,
     "battingRating": 61,
     "bowlingRating": 20,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 74,
@@ -811,7 +884,8 @@
     "basePrice": 7500000,
     "battingRating": 62,
     "bowlingRating": 17,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 75,
@@ -822,7 +896,8 @@
     "basePrice": 10000000,
     "battingRating": 72,
     "bowlingRating": 10,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 76,
@@ -833,7 +908,8 @@
     "basePrice": 5000000,
     "battingRating": 81,
     "bowlingRating": 20,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 77,
@@ -844,7 +920,8 @@
     "basePrice": 5000000,
     "battingRating": 60,
     "bowlingRating": 10,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 78,
@@ -855,7 +932,8 @@
     "basePrice": 5000000,
     "battingRating": 61,
     "bowlingRating": 10,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 79,
@@ -866,7 +944,8 @@
     "basePrice": 10000000,
     "battingRating": 82,
     "bowlingRating": 5,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 80,
@@ -877,7 +956,8 @@
     "basePrice": 10000000,
     "battingRating": 77,
     "bowlingRating": 16,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 81,
@@ -888,7 +968,8 @@
     "basePrice": 7500000,
     "battingRating": 66,
     "bowlingRating": 24,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 82,
@@ -899,7 +980,8 @@
     "basePrice": 7500000,
     "battingRating": 74,
     "bowlingRating": 18,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 83,
@@ -910,7 +992,8 @@
     "basePrice": 5000000,
     "battingRating": 61,
     "bowlingRating": 22,
-    "image": null
+    "image": null,
+    "realTeamId": "rr"
   },
   {
     "id": 84,
@@ -921,7 +1004,8 @@
     "basePrice": 10000000,
     "battingRating": 62,
     "bowlingRating": 24,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 85,
@@ -932,7 +1016,8 @@
     "basePrice": 10000000,
     "battingRating": 71,
     "bowlingRating": 15,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 86,
@@ -943,7 +1028,8 @@
     "basePrice": 2000000,
     "battingRating": 67,
     "bowlingRating": 11,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 87,
@@ -954,7 +1040,8 @@
     "basePrice": 7500000,
     "battingRating": 21,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 88,
@@ -965,7 +1052,8 @@
     "basePrice": 7500000,
     "battingRating": 15,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 89,
@@ -976,7 +1064,8 @@
     "basePrice": 7500000,
     "battingRating": 69,
     "bowlingRating": 70,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 90,
@@ -987,7 +1076,8 @@
     "basePrice": 2000000,
     "battingRating": 7,
     "bowlingRating": 66,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 91,
@@ -998,7 +1088,8 @@
     "basePrice": 2000000,
     "battingRating": 23,
     "bowlingRating": 66,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 92,
@@ -1009,7 +1100,8 @@
     "basePrice": 10000000,
     "battingRating": 26,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 93,
@@ -1020,7 +1112,8 @@
     "basePrice": 5000000,
     "battingRating": 19,
     "bowlingRating": 68,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 94,
@@ -1031,7 +1124,8 @@
     "basePrice": 7500000,
     "battingRating": 18,
     "bowlingRating": 67,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 95,
@@ -1042,7 +1136,8 @@
     "basePrice": 5000000,
     "battingRating": 26,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 96,
@@ -1053,7 +1148,8 @@
     "basePrice": 7500000,
     "battingRating": 24,
     "bowlingRating": 76,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 97,
@@ -1064,7 +1160,8 @@
     "basePrice": 5000000,
     "battingRating": 33,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 98,
@@ -1075,7 +1172,8 @@
     "basePrice": 10000000,
     "battingRating": 19,
     "bowlingRating": 70,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 99,
@@ -1086,7 +1184,8 @@
     "basePrice": 2000000,
     "battingRating": 29,
     "bowlingRating": 70,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 100,
@@ -1097,7 +1196,8 @@
     "basePrice": 15000000,
     "battingRating": 16,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 101,
@@ -1108,7 +1208,8 @@
     "basePrice": 5000000,
     "battingRating": 16,
     "bowlingRating": 79,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "id": 102,
@@ -1119,7 +1220,8 @@
     "basePrice": 2000000,
     "battingRating": 5,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 103,
@@ -1130,7 +1232,8 @@
     "basePrice": 5000000,
     "battingRating": 50,
     "bowlingRating": 51,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "id": 104,
@@ -1141,7 +1244,8 @@
     "basePrice": 15000000,
     "battingRating": 71,
     "bowlingRating": 78,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 105,
@@ -1152,7 +1256,8 @@
     "basePrice": 10000000,
     "battingRating": 62,
     "bowlingRating": 59,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 106,
@@ -1163,7 +1268,8 @@
     "basePrice": 7500000,
     "battingRating": 57,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 107,
@@ -1174,7 +1280,8 @@
     "basePrice": 5000000,
     "battingRating": 54,
     "bowlingRating": 50,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 108,
@@ -1185,7 +1292,8 @@
     "basePrice": 10000000,
     "battingRating": 63,
     "bowlingRating": 55,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 109,
@@ -1196,7 +1304,8 @@
     "basePrice": 10000000,
     "battingRating": 58,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 110,
@@ -1207,7 +1316,8 @@
     "basePrice": 2000000,
     "battingRating": 52,
     "bowlingRating": 61,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 111,
@@ -1218,7 +1328,8 @@
     "basePrice": 7500000,
     "battingRating": 73,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 112,
@@ -1229,7 +1340,8 @@
     "basePrice": 2000000,
     "battingRating": 76,
     "bowlingRating": 66,
-    "image": null
+    "image": null,
+    "realTeamId": "mi"
   },
   {
     "id": 113,
@@ -1240,7 +1352,8 @@
     "basePrice": 5000000,
     "battingRating": 84,
     "bowlingRating": 19,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 114,
@@ -1251,7 +1364,8 @@
     "basePrice": 5000000,
     "battingRating": 76,
     "bowlingRating": 21,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 115,
@@ -1262,7 +1376,8 @@
     "basePrice": 5000000,
     "battingRating": 83,
     "bowlingRating": 16,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 116,
@@ -1273,7 +1388,8 @@
     "basePrice": 2000000,
     "battingRating": 76,
     "bowlingRating": 20,
-    "image": null
+    "image": null,
+    "realTeamId": "dc"
   },
   {
     "id": 117,
@@ -1284,7 +1400,8 @@
     "basePrice": 10000000,
     "battingRating": 75,
     "bowlingRating": 68,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 118,
@@ -1295,7 +1412,8 @@
     "basePrice": 10000000,
     "battingRating": 77,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 119,
@@ -1306,7 +1424,8 @@
     "basePrice": 7500000,
     "battingRating": 63,
     "bowlingRating": 63,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 120,
@@ -1317,7 +1436,8 @@
     "basePrice": 7500000,
     "battingRating": 10,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 121,
@@ -1328,7 +1448,8 @@
     "basePrice": 10000000,
     "battingRating": 30,
     "bowlingRating": 60,
-    "image": null
+    "image": null,
+    "realTeamId": "mi"
   },
   {
     "id": 122,
@@ -1339,7 +1460,8 @@
     "basePrice": 5000000,
     "battingRating": 74,
     "bowlingRating": 20,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 123,
@@ -1350,7 +1472,8 @@
     "basePrice": 10000000,
     "battingRating": 60,
     "bowlingRating": 10,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 124,
@@ -1361,7 +1484,8 @@
     "basePrice": 10000000,
     "battingRating": 70,
     "bowlingRating": 15,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 125,
@@ -1372,7 +1496,8 @@
     "basePrice": 10000000,
     "battingRating": 29,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 126,
@@ -1383,7 +1508,8 @@
     "basePrice": 2000000,
     "battingRating": 79,
     "bowlingRating": 13,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 127,
@@ -1394,7 +1520,8 @@
     "basePrice": 5000000,
     "battingRating": 22,
     "bowlingRating": 84,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 128,
@@ -1405,7 +1532,8 @@
     "basePrice": 2000000,
     "battingRating": 19,
     "bowlingRating": 64,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 129,
@@ -1416,7 +1544,8 @@
     "basePrice": 2000000,
     "battingRating": 77,
     "bowlingRating": 64,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Waniya.jpg/330px-Waniya.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Waniya.jpg/330px-Waniya.jpg",
+    "realTeamId": null
   },
   {
     "id": 130,
@@ -1427,7 +1556,8 @@
     "basePrice": 5000000,
     "battingRating": 70,
     "bowlingRating": 8,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 131,
@@ -1438,7 +1568,8 @@
     "basePrice": 5000000,
     "battingRating": 68,
     "bowlingRating": 73,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Shahrukh_Khan.jpg/330px-Shahrukh_Khan.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d7/Shahrukh_Khan.jpg/330px-Shahrukh_Khan.jpg",
+    "realTeamId": null
   },
   {
     "id": 132,
@@ -1449,7 +1580,8 @@
     "basePrice": 2000000,
     "battingRating": 82,
     "bowlingRating": 9,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 133,
@@ -1460,7 +1592,8 @@
     "basePrice": 10000000,
     "battingRating": 74,
     "bowlingRating": 68,
-    "image": null
+    "image": null,
+    "realTeamId": "gt"
   },
   {
     "id": 134,
@@ -1471,7 +1604,8 @@
     "basePrice": 7500000,
     "battingRating": 71,
     "bowlingRating": 12,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 135,
@@ -1482,7 +1616,8 @@
     "basePrice": 10000000,
     "battingRating": 75,
     "bowlingRating": 6,
-    "image": null
+    "image": null,
+    "realTeamId": "pbks"
   },
   {
     "id": 136,
@@ -1493,7 +1628,8 @@
     "basePrice": 7500000,
     "battingRating": 72,
     "bowlingRating": 16,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 137,
@@ -1504,7 +1640,8 @@
     "basePrice": 7500000,
     "battingRating": 61,
     "bowlingRating": 64,
-    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Nitish_Kumar_Reddy_BGT_2024_%28cropped%29_2.jpg/330px-Nitish_Kumar_Reddy_BGT_2024_%28cropped%29_2.jpg"
+    "image": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Nitish_Kumar_Reddy_BGT_2024_%28cropped%29_2.jpg/330px-Nitish_Kumar_Reddy_BGT_2024_%28cropped%29_2.jpg",
+    "realTeamId": null
   },
   {
     "id": 138,
@@ -1515,7 +1652,8 @@
     "basePrice": 2000000,
     "battingRating": 56,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": "srh"
   },
   {
     "id": 139,
@@ -1526,7 +1664,8 @@
     "basePrice": 10000000,
     "battingRating": 78,
     "bowlingRating": 6,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 140,
@@ -1537,7 +1676,8 @@
     "basePrice": 10000000,
     "battingRating": 13,
     "bowlingRating": 76,
-    "image": null
+    "image": null,
+    "realTeamId": "lsg"
   },
   {
     "id": 141,
@@ -1548,7 +1688,8 @@
     "basePrice": 10000000,
     "battingRating": 17,
     "bowlingRating": 77,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 142,
@@ -1559,7 +1700,8 @@
     "basePrice": 5000000,
     "battingRating": 24,
     "bowlingRating": 69,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 143,
@@ -1570,7 +1712,8 @@
     "basePrice": 5000000,
     "battingRating": 20,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 144,
@@ -1581,7 +1724,8 @@
     "basePrice": 7500000,
     "battingRating": 9,
     "bowlingRating": 69,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 145,
@@ -1592,7 +1736,8 @@
     "basePrice": 5000000,
     "battingRating": 13,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 146,
@@ -1603,7 +1748,8 @@
     "basePrice": 5000000,
     "battingRating": 16,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 147,
@@ -1614,7 +1760,8 @@
     "basePrice": 7500000,
     "battingRating": 18,
     "bowlingRating": 75,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 148,
@@ -1625,7 +1772,8 @@
     "basePrice": 2000000,
     "battingRating": 6,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 149,
@@ -1636,7 +1784,8 @@
     "basePrice": 10000000,
     "battingRating": 15,
     "bowlingRating": 62,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 150,
@@ -1647,7 +1796,8 @@
     "basePrice": 2000000,
     "battingRating": 23,
     "bowlingRating": 83,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 151,
@@ -1658,7 +1808,8 @@
     "basePrice": 2000000,
     "battingRating": 34,
     "bowlingRating": 69,
-    "image": null
+    "image": null,
+    "realTeamId": "kkr"
   },
   {
     "id": 152,
@@ -1669,7 +1820,8 @@
     "basePrice": 10000000,
     "battingRating": 16,
     "bowlingRating": 82,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 153,
@@ -1680,7 +1832,8 @@
     "basePrice": 5000000,
     "battingRating": 14,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 154,
@@ -1691,7 +1844,8 @@
     "basePrice": 2000000,
     "battingRating": 20,
     "bowlingRating": 78,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 155,
@@ -1702,7 +1856,8 @@
     "basePrice": 5000000,
     "battingRating": 26,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 156,
@@ -1713,7 +1868,8 @@
     "basePrice": 7500000,
     "battingRating": 11,
     "bowlingRating": 67,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 157,
@@ -1724,7 +1880,8 @@
     "basePrice": 7500000,
     "battingRating": 16,
     "bowlingRating": 80,
-    "image": null
+    "image": null,
+    "realTeamId": "csk"
   },
   {
     "id": 158,
@@ -1735,7 +1892,8 @@
     "basePrice": 7500000,
     "battingRating": 33,
     "bowlingRating": 65,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 159,
@@ -1746,7 +1904,8 @@
     "basePrice": 10000000,
     "battingRating": 7,
     "bowlingRating": 71,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 160,
@@ -1757,7 +1916,8 @@
     "basePrice": 2000000,
     "battingRating": 30,
     "bowlingRating": 73,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 161,
@@ -1768,7 +1928,8 @@
     "basePrice": 2000000,
     "battingRating": 32,
     "bowlingRating": 61,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 162,
@@ -1779,7 +1940,8 @@
     "basePrice": 2000000,
     "battingRating": 24,
     "bowlingRating": 66,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 163,
@@ -1790,7 +1952,8 @@
     "basePrice": 5000000,
     "battingRating": 29,
     "bowlingRating": 76,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 164,
@@ -1801,7 +1964,8 @@
     "basePrice": 20000000,
     "battingRating": 6,
     "bowlingRating": 64,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 165,
@@ -1812,7 +1976,8 @@
     "basePrice": 10000000,
     "battingRating": 55,
     "bowlingRating": 65,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 166,
@@ -1823,7 +1988,8 @@
     "basePrice": 10000000,
     "battingRating": 58,
     "bowlingRating": 65,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 167,
@@ -1834,7 +2000,8 @@
     "basePrice": 7500000,
     "battingRating": 64,
     "bowlingRating": 57,
-    "image": null
+    "image": null,
+    "realTeamId": "rcb"
   },
   {
     "id": 168,
@@ -1845,7 +2012,8 @@
     "basePrice": 5000000,
     "battingRating": 65,
     "bowlingRating": 71,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 169,
@@ -1856,7 +2024,8 @@
     "basePrice": 10000000,
     "battingRating": 74,
     "bowlingRating": 19,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 170,
@@ -1867,7 +2036,8 @@
     "basePrice": 5000000,
     "battingRating": 15,
     "bowlingRating": 63,
-    "image": null
+    "image": null,
+    "realTeamId": "mi"
   },
   {
     "id": 171,
@@ -1878,7 +2048,8 @@
     "basePrice": 2000000,
     "battingRating": 34,
     "bowlingRating": 79,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 172,
@@ -1889,7 +2060,8 @@
     "basePrice": 5000000,
     "battingRating": 24,
     "bowlingRating": 72,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 173,
@@ -1900,7 +2072,8 @@
     "basePrice": 5000000,
     "battingRating": 9,
     "bowlingRating": 63,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 174,
@@ -1911,7 +2084,8 @@
     "basePrice": 7500000,
     "battingRating": 8,
     "bowlingRating": 67,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 175,
@@ -1922,7 +2096,8 @@
     "basePrice": 10000000,
     "battingRating": 25,
     "bowlingRating": 74,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 176,
@@ -1933,7 +2108,8 @@
     "basePrice": 7500000,
     "battingRating": 12,
     "bowlingRating": 81,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 177,
@@ -1944,7 +2120,8 @@
     "basePrice": 2000000,
     "battingRating": 69,
     "bowlingRating": 62,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 178,
@@ -1955,7 +2132,8 @@
     "basePrice": 5000000,
     "battingRating": 59,
     "bowlingRating": 69,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 179,
@@ -1966,7 +2144,8 @@
     "basePrice": 15000000,
     "battingRating": 57,
     "bowlingRating": 59,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 180,
@@ -1977,7 +2156,8 @@
     "basePrice": 10000000,
     "battingRating": 66,
     "bowlingRating": 51,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 181,
@@ -1988,7 +2168,8 @@
     "basePrice": 10000000,
     "battingRating": 71,
     "bowlingRating": 79,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 182,
@@ -1999,7 +2180,8 @@
     "basePrice": 2000000,
     "battingRating": 73,
     "bowlingRating": 17,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 183,
@@ -2010,7 +2192,8 @@
     "basePrice": 15000000,
     "battingRating": 67,
     "bowlingRating": 5,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 184,
@@ -2021,7 +2204,8 @@
     "basePrice": 5000000,
     "battingRating": 65,
     "bowlingRating": 24,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 185,
@@ -2032,7 +2216,8 @@
     "basePrice": 20000000,
     "battingRating": 77,
     "bowlingRating": 17,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 186,
@@ -2043,7 +2228,8 @@
     "basePrice": 7500000,
     "battingRating": 79,
     "bowlingRating": 5,
-    "image": null
+    "image": null,
+    "realTeamId": null
   },
   {
     "id": 187,
@@ -2054,6 +2240,7 @@
     "basePrice": 10000000,
     "battingRating": 82,
     "bowlingRating": 13,
-    "image": null
+    "image": null,
+    "realTeamId": null
   }
 ]
