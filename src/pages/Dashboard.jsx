@@ -1,14 +1,32 @@
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GameContext } from '../context/GameContext';
-import { Trophy } from 'lucide-react';
+import { Trophy, Plus, X } from 'lucide-react';
 
 const Dashboard = () => {
-  const { state, selectTeam, nextPlayer } = useContext(GameContext);
+  const { state, selectTeam, createCustomTeam, nextPlayer } = useContext(GameContext);
   const navigate = useNavigate();
+
+  const [showCustomModal, setShowCustomModal] = useState(false);
+  const [customTeamData, setCustomTeamData] = useState({
+    name: '',
+    shortName: '',
+    color: '#3b82f6',
+    secondaryColor: '#1e3a8a'
+  });
 
   const handleSelectTeam = (teamId) => {
     selectTeam(teamId);
+    if (!state.currentPlayer) {
+      nextPlayer();
+    }
+    navigate('/auction');
+  };
+
+  const handleCreateCustom = (e) => {
+    e.preventDefault();
+    if (!customTeamData.name || !customTeamData.shortName) return;
+    createCustomTeam(customTeamData);
     if (!state.currentPlayer) {
       nextPlayer();
     }
@@ -84,7 +102,118 @@ const Dashboard = () => {
             </div>
           </div>
         ))}
+
+        {/* Create Custom Team Card */}
+        <div 
+          className={`glass-panel-3d animate-fade-in stagger-5`}
+          style={{ cursor: 'pointer' }}
+          onClick={() => setShowCustomModal(true)}
+        >
+          <div 
+            className="glass-panel glass-panel-3d-inner"
+            style={{ 
+              padding: '2.5rem 2rem', 
+              borderTop: `4px dashed var(--glass-border)`,
+              background: `linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02))`,
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'var(--accent-gold)';
+              e.currentTarget.style.background = 'rgba(251,191,36,0.1)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'var(--glass-border)';
+              e.currentTarget.style.background = `linear-gradient(to bottom, rgba(255,255,255,0.05), rgba(255,255,255,0.02))`;
+            }}
+          >
+            <div style={{ 
+              width: '90px', 
+              height: '90px', 
+              borderRadius: '50%', 
+              background: 'rgba(255,255,255,0.1)',
+              margin: '0 auto 1.5rem auto',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}>
+              <Plus size={40} color="var(--accent-gold)" />
+            </div>
+            <h3 style={{ fontSize: '1.4rem', color: 'var(--accent-gold)' }}>Custom Franchise</h3>
+            <p style={{ color: 'var(--text-secondary)', marginTop: '1rem', fontSize: '0.9rem' }}>Build your own legacy</p>
+          </div>
+        </div>
       </div>
+
+      {/* Custom Team Modal */}
+      {showCustomModal && (
+        <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
+          <div className="glass-panel animate-fade-in" style={{ width: '100%', maxWidth: '500px', padding: '2rem', position: 'relative' }}>
+            <button 
+              onClick={() => setShowCustomModal(false)}
+              style={{ position: 'absolute', top: '1rem', right: '1rem', background: 'transparent', border: 'none', color: 'white', cursor: 'pointer' }}
+            >
+              <X size={24} />
+            </button>
+            <h2 style={{ marginBottom: '2rem', color: 'var(--accent-gold)' }}>Create Custom Franchise</h2>
+            
+            <form onSubmit={handleCreateCustom} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', textAlign: 'left' }}>
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Franchise Full Name</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. Kerala Blasters"
+                  required
+                  style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white', fontSize: '1.1rem' }}
+                  value={customTeamData.name}
+                  onChange={e => setCustomTeamData({...customTeamData, name: e.target.value})}
+                />
+              </div>
+              
+              <div>
+                <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Short Name (Acronym)</label>
+                <input 
+                  type="text" 
+                  placeholder="e.g. KB"
+                  required
+                  maxLength={4}
+                  style={{ width: '100%', padding: '1rem', background: 'rgba(0,0,0,0.5)', border: '1px solid var(--glass-border)', borderRadius: '8px', color: 'white', fontSize: '1.1rem' }}
+                  value={customTeamData.shortName}
+                  onChange={e => setCustomTeamData({...customTeamData, shortName: e.target.value.toUpperCase()})}
+                />
+              </div>
+
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Primary Color</label>
+                  <input 
+                    type="color" 
+                    value={customTeamData.color}
+                    onChange={e => setCustomTeamData({...customTeamData, color: e.target.value})}
+                    style={{ width: '100%', height: '50px', cursor: 'pointer', background: 'transparent', border: 'none' }}
+                  />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)' }}>Secondary Color</label>
+                  <input 
+                    type="color" 
+                    value={customTeamData.secondaryColor}
+                    onChange={e => setCustomTeamData({...customTeamData, secondaryColor: e.target.value})}
+                    style={{ width: '100%', height: '50px', cursor: 'pointer', background: 'transparent', border: 'none' }}
+                  />
+                </div>
+              </div>
+
+              <button type="submit" className="glass-btn primary gold" style={{ marginTop: '1rem', padding: '1rem', fontSize: '1.2rem' }}>
+                Launch Franchise
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

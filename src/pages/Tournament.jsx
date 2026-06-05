@@ -10,6 +10,7 @@ const Tournament = () => {
   // Playing 11 Selection State
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [selected11, setSelected11] = useState([]);
+  const [captainId, setCaptainId] = useState(null);
 
   const getStandings = () => Object.entries(state.pointsTable).map(([id, stats]) => ({ team: state.teams.find(t => t.id === id), ...stats })).sort((a,b) => b.points - a.points || b.nrr - a.nrr);
 
@@ -101,9 +102,12 @@ const Tournament = () => {
     return selected;
   };
 
-  const simulateInnings = (batting11, bowling11) => {
-    const teamBatRatingAvg = batting11.slice(0, 7).reduce((acc, p) => acc + p.battingRating, 0) / 7 || 1;
-    const teamBowlRatingAvg = bowling11.filter(p => p.role === 'Bowler' || p.role === 'All-Rounder').slice(0, 5).reduce((acc, p) => acc + p.bowlingRating, 0) / 5 || 1;
+  const simulateInnings = (batting11, bowling11, battingCaptainId, bowlingCaptainId) => {
+    const getBatRating = (p) => p.id === battingCaptainId ? p.battingRating * 1.05 : p.battingRating;
+    const getBowlRating = (p) => p.id === bowlingCaptainId ? p.bowlingRating * 1.05 : p.bowlingRating;
+
+    const teamBatRatingAvg = batting11.slice(0, 7).reduce((acc, p) => acc + getBatRating(p), 0) / 7 || 1;
+    const teamBowlRatingAvg = bowling11.filter(p => p.role === 'Bowler' || p.role === 'All-Rounder').slice(0, 5).reduce((acc, p) => acc + getBowlRating(p), 0) / 5 || 1;
 
     const runMultiplier = (teamBatRatingAvg / teamBowlRatingAvg) * 1.5; 
     const totalRuns = Math.floor((120 + Math.random() * 40) * runMultiplier);
@@ -160,12 +164,16 @@ const Tournament = () => {
     return { totalRuns, totalWickets, battingPerformances, bowlingPerformances, highlights };
   };
 
-  const executeMatch = (t1_11, t2_11, team1, team2) => {
+  const executeMatch = (t1_11, t2_11, team1, team2, t1_captain = null, t2_captain = null) => {
     const t1_11WithTeam = t1_11.map(p => ({ ...p, teamName: team1.shortName }));
     const t2_11WithTeam = t2_11.map(p => ({ ...p, teamName: team2.shortName }));
 
-    const inn1 = simulateInnings(t1_11WithTeam, t2_11WithTeam);
-    const inn2 = simulateInnings(t2_11WithTeam, t1_11WithTeam);
+    // AI automatically picks the highest rated player as captain if none provided
+    const aiT1Cap = t1_captain || t1_11WithTeam.sort((a,b) => (b.battingRating+b.bowlingRating) - (a.battingRating+a.bowlingRating))[0]?.id;
+    const aiT2Cap = t2_captain || t2_11WithTeam.sort((a,b) => (b.battingRating+b.bowlingRating) - (a.battingRating+a.bowlingRating))[0]?.id;
+
+    const inn1 = simulateInnings(t1_11WithTeam, t2_11WithTeam, aiT1Cap, aiT2Cap);
+    const inn2 = simulateInnings(t2_11WithTeam, t1_11WithTeam, aiT2Cap, aiT1Cap);
 
     let resultStr = "";
     let winnerId = null;
@@ -211,26 +219,48 @@ const Tournament = () => {
   };
 
   const handleUserPlayMatch = () => {
-    // If playing 11 selected, execute
-    if (selected11.length === 11) {
-      const isTeam1 = nextMatch.team1 === myTeam.id;
-      const t1 = isTeam1 ? myTeam : state.teams.find(t => t.id === nextMatch.team1);
-      const t2 = isTeam1 ? state.teams.find(t => t.id === nextMatch.team2) : myTeam;
-      
-      const t1_11 = isTeam1 ? selected11 : autoPick11(t1.squad);
-      const t2_11 = isTeam1 ? autoPick11(t2.squad) : selected11;
-      
-      executeMatch(t1_11, t2_11, t1, t2);
-      setShowSelectionModal(false);
-      setSelected11([]);
-    } else {
+    if (selected11.length !== 11) {
       alert("Please select exactly 11 players.");
+      return;
     }
+    
+    if (!captainId) {
+      alert("Please select a Captain by clicking the 'C' badge next to a selected player.");
+      return;
+    }
+
+    const wkCount = selected11.filter(p => p.role === 'Wicket-Keeper').length;
+    if (wkCount < 1) {
+      alert("You must select at least 1 Wicket-Keeper in your Playing 11.");
+      return;
+    }
+
+    const overseasCount = selected11.filter(p => p.isOverseas).length;
+    if (overseasCount > 4) {
+      alert(`You can only have a maximum of 4 Overseas players. You selected ${overseasCount}.`);
+      return;
+    }
+
+    const isTeam1 = nextMatch.team1 === myTeam.id;
+    const t1 = isTeam1 ? myTeam : state.teams.find(t => t.id === nextMatch.team1);
+    const t2 = isTeam1 ? state.teams.find(t => t.id === nextMatch.team2) : myTeam;
+    
+    const t1_11 = isTeam1 ? selected11 : autoPick11(t1.squad);
+    const t2_11 = isTeam1 ? autoPick11(t2.squad) : selected11;
+    
+    const t1_cap = isTeam1 ? captainId : null;
+    const t2_cap = isTeam1 ? null : captainId;
+
+    executeMatch(t1_11, t2_11, t1, t2, t1_cap, t2_cap);
+    setShowSelectionModal(false);
+    setSelected11([]);
+    setCaptainId(null);
   };
 
   const togglePlayerSelection = (player) => {
     if (selected11.find(p => p.id === player.id)) {
       setSelected11(selected11.filter(p => p.id !== player.id));
+      if (captainId === player.id) setCaptainId(null);
     } else {
       if (selected11.length < 11) {
         setSelected11([...selected11, player]);
@@ -436,39 +466,84 @@ const Tournament = () => {
 
       </div>
 
-      {/* Playing 11 Selection Modal */}
+      {/* Playing 11 Selection Modal (The Locker Room) */}
       {showSelectionModal && (
         <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', background: 'rgba(0,0,0,0.8)', backdropFilter: 'blur(10px)', zIndex: 9999, display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '1rem' }}>
           <div className="glass-panel" style={{ width: '100%', maxWidth: '800px', maxHeight: '90vh', overflowY: 'auto', padding: '2rem' }}>
-            <h2 style={{ marginBottom: '1rem' }}>Select Playing 11</h2>
-            <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>Select exactly 11 players from your squad to take the field. Currently selected: <strong style={{ color: selected11.length === 11 ? 'var(--accent-green)' : 'white' }}>{selected11.length}/11</strong></p>
+            <h2 style={{ marginBottom: '0.5rem', color: 'var(--accent-gold)' }}>The Locker Room</h2>
+            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+              <div style={{ color: 'var(--text-secondary)' }}>Select exactly 11 players. Tap a selected player's 'C' badge to make them Captain.</div>
+              <div style={{ display: 'flex', gap: '1rem', fontWeight: 'bold' }}>
+                <span style={{ color: selected11.length === 11 ? 'var(--accent-green)' : 'white' }}>Players: {selected11.length}/11</span>
+                <span style={{ color: selected11.filter(p => p.isOverseas).length > 4 ? 'var(--accent-red)' : 'white' }}>Overseas: {selected11.filter(p => p.isOverseas).length}/4</span>
+                <span style={{ color: selected11.filter(p => p.role === 'Wicket-Keeper').length === 0 ? 'var(--accent-red)' : 'var(--accent-green)' }}>WK: {selected11.filter(p => p.role === 'Wicket-Keeper').length}</span>
+              </div>
+            </div>
             
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
               {myTeam.squad.map(player => {
                 const isSelected = !!selected11.find(p => p.id === player.id);
+                const isCaptain = captainId === player.id;
                 return (
                   <div 
                     key={player.id} 
-                    onClick={() => togglePlayerSelection(player)}
                     style={{ 
                       padding: '1rem', 
                       borderRadius: '8px', 
                       background: isSelected ? 'rgba(34, 197, 94, 0.2)' : 'rgba(255,255,255,0.05)',
-                      border: isSelected ? '1px solid var(--accent-green)' : '1px solid transparent',
+                      border: isCaptain ? '2px solid var(--accent-gold)' : isSelected ? '2px solid var(--accent-green)' : '2px solid transparent',
                       cursor: 'pointer',
-                      transition: 'all 0.2s'
+                      transition: 'all 0.2s',
+                      position: 'relative'
                     }}
                   >
-                    <div style={{ fontWeight: 'bold' }}>{player.name}</div>
-                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{player.role} • {player.country}</div>
+                    <div onClick={() => togglePlayerSelection(player)}>
+                      <div style={{ fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' }}>
+                        <span>{player.name}</span>
+                        {player.isOverseas && <span style={{ fontSize: '0.7rem', background: 'var(--accent-red)', padding: '2px 4px', borderRadius: '4px' }}>OS</span>}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{player.role} • {player.battingRating} BAT | {player.bowlingRating} BOWL</div>
+                    </div>
+                    
+                    {isSelected && (
+                      <button 
+                        onClick={(e) => { e.stopPropagation(); setCaptainId(player.id); }}
+                        style={{
+                          position: 'absolute',
+                          top: '-10px',
+                          right: '-10px',
+                          width: '24px',
+                          height: '24px',
+                          borderRadius: '50%',
+                          background: isCaptain ? 'var(--accent-gold)' : '#444',
+                          color: isCaptain ? 'black' : 'white',
+                          border: 'none',
+                          fontWeight: 'bold',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          boxShadow: '0 2px 5px rgba(0,0,0,0.5)'
+                        }}
+                        title="Set as Captain"
+                      >
+                        C
+                      </button>
+                    )}
                   </div>
                 );
               })}
             </div>
 
             <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
-              <button className="glass-btn" onClick={() => setShowSelectionModal(false)}>Cancel</button>
-              <button className="glass-btn primary" disabled={selected11.length !== 11} onClick={handleUserPlayMatch}>Start Match</button>
+              <button className="glass-btn" onClick={() => { setShowSelectionModal(false); setSelected11([]); setCaptainId(null); }}>Cancel</button>
+              <button 
+                className="glass-btn primary gold" 
+                disabled={selected11.length !== 11 || !captainId || selected11.filter(p => p.role === 'Wicket-Keeper').length < 1 || selected11.filter(p => p.isOverseas).length > 4} 
+                onClick={handleUserPlayMatch}
+              >
+                Start Match
+              </button>
             </div>
           </div>
         </div>

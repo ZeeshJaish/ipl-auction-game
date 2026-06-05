@@ -84,6 +84,29 @@ const gameReducer = (state, action) => {
         userTeam: action.payload,
         auctionPhase: 'AUCTION'
       };
+
+    case 'CREATE_CUSTOM_TEAM': {
+      const newTeam = {
+        id: `custom_${Date.now()}`,
+        name: action.payload.name,
+        shortName: action.payload.shortName,
+        color: action.payload.color,
+        secondaryColor: action.payload.secondaryColor,
+        purse: 1000000000,
+        squad: []
+      };
+      
+      // Replace the last team in the list with the custom team to keep it at 10 teams
+      const updatedTeams = [...state.teams];
+      updatedTeams[updatedTeams.length - 1] = newTeam;
+
+      return {
+        ...state,
+        teams: updatedTeams,
+        userTeam: newTeam.id,
+        auctionPhase: 'AUCTION'
+      };
+    }
     
     case 'NEXT_PLAYER':
       if (state.auctionQueue.length === 0) {
@@ -303,6 +326,7 @@ export const GameProvider = ({ children }) => {
   const loadGame = (slotId, savedState) => dispatch({ type: 'LOAD_GAME', payload: { slotId, savedState } });
   const startNewGame = (slotId) => dispatch({ type: 'NEW_GAME', payload: { slotId } });
   const selectTeam = (teamId) => dispatch({ type: 'SELECT_TEAM', payload: teamId });
+  const createCustomTeam = (payload) => dispatch({ type: 'CREATE_CUSTOM_TEAM', payload });
   const nextPlayer = () => dispatch({ type: 'NEXT_PLAYER' });
   const placeBid = (teamId, amount) => dispatch({ type: 'PLACE_BID', payload: { teamId, amount } });
   const sellPlayer = () => dispatch({ type: 'SELL_PLAYER' });
@@ -319,6 +343,7 @@ export const GameProvider = ({ children }) => {
       loadGame,
       startNewGame,
       selectTeam, 
+      createCustomTeam,
       nextPlayer, 
       placeBid, 
       sellPlayer, 
