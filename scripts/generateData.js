@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { additionalPlayers } from './realPlayersList.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -75,19 +76,11 @@ const generatePlayers = async () => {
     players.push({ ...p, id: idCounter++, isOverseas, image });
   }
 
-  const roles = ['Batsman', 'Bowler', 'All-Rounder', 'Wicket-Keeper'];
-  const countries = ['India', 'India', 'India', 'Australia', 'England', 'South Africa', 'West Indies', 'New Zealand', 'Sri Lanka', 'Afghanistan', 'Bangladesh'];
   const basePrices = [2000000, 5000000, 7500000, 10000000, 15000000, 20000000];
 
-  const firstNames = ['Aarav', 'Vihaan', 'Arjun', 'Sai', 'Rohan', 'Kabir', 'Ananya', 'Vivaan', 'Aditya', 'Dev', 'Aryan', 'Ishaan', 'Shaurya', 'Ayaan', 'Krishna', 'Om', 'Pranav', 'Rudra', 'Yash', 'Atharv', 'James', 'William', 'Oliver', 'Henry', 'Thomas', 'Jack', 'Alexander', 'Luke', 'Daniel', 'Matthew'];
-  const lastNames = ['Sharma', 'Singh', 'Kumar', 'Patel', 'Gupta', 'Verma', 'Joshi', 'Yadav', 'Rao', 'Chauhan', 'Rajput', 'Das', 'Roy', 'Nair', 'Pillai', 'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia', 'Miller', 'Davis', 'Rodriguez', 'Martinez'];
-
-  while (players.length < 200) {
-    const role = roles[Math.floor(Math.random() * roles.length)];
-    const country = countries[Math.floor(Math.random() * countries.length)];
-    const isOverseas = country !== 'India';
-    const name = `${firstNames[Math.floor(Math.random() * firstNames.length)]} ${lastNames[Math.floor(Math.random() * lastNames.length)]}`;
-    
+  for (let p of additionalPlayers) {
+    const role = p.role;
+    const isOverseas = p.country !== 'India';
     const basePrice = basePrices[Math.floor(Math.random() * (basePrices.length - (Math.random() > 0.8 ? 0 : 2)))]; 
     
     let battingRating = 10 + Math.floor(Math.random() * 30);
@@ -104,16 +97,19 @@ const generatePlayers = async () => {
       bowlingRating = 50 + Math.floor(Math.random() * 30);
     }
 
+    console.log(`Fetching image for ${p.name}...`);
+    const image = await fetchWikiImage(p.name);
+
     players.push({
       id: idCounter++,
-      name,
+      name: p.name,
       role,
-      country,
+      country: p.country,
       isOverseas,
       basePrice,
       battingRating,
       bowlingRating,
-      image: null
+      image
     });
   }
   
