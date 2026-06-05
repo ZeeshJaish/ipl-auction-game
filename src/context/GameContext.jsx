@@ -12,11 +12,42 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
+const generateAuctionQueue = (players) => {
+  let marquee = [];
+  let batsmen = [];
+  let allrounders = [];
+  let wicketkeepers = [];
+  let bowlers = [];
+  let uncapped = [];
+
+  players.forEach(p => {
+    if (p.basePrice < 5000000) {
+      uncapped.push({ ...p, poolName: 'Uncapped Players' });
+    } else if (p.basePrice >= 15000000) {
+      marquee.push({ ...p, poolName: 'Marquee Players' });
+    } else {
+      if (p.role === 'Batsman') batsmen.push({ ...p, poolName: 'Capped Batsmen' });
+      else if (p.role === 'All-Rounder') allrounders.push({ ...p, poolName: 'Capped All-Rounders' });
+      else if (p.role === 'Wicket-Keeper') wicketkeepers.push({ ...p, poolName: 'Capped Wicket-Keepers' });
+      else bowlers.push({ ...p, poolName: 'Capped Bowlers' });
+    }
+  });
+
+  return [
+    ...shuffleArray(marquee),
+    ...shuffleArray(batsmen),
+    ...shuffleArray(allrounders),
+    ...shuffleArray(wicketkeepers),
+    ...shuffleArray(bowlers),
+    ...shuffleArray(uncapped)
+  ];
+};
+
 const getInitialState = () => ({
   activeSlot: null,
   userTeam: null,
   teams: initialTeams.map(t => ({ ...t, squad: [] })),
-  auctionQueue: shuffleArray([...initialPlayers]),
+  auctionQueue: generateAuctionQueue([...initialPlayers]),
   currentPlayer: null,
   biddingState: {
     currentBid: 0,

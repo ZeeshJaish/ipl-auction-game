@@ -11,7 +11,7 @@ const AuctionRoom = () => {
     return <div style={{ textAlign: 'center', marginTop: '5rem' }}>Please select a team from the Dashboard first.</div>;
   }
 
-  const { currentPlayer, biddingState, teams, userTeam } = state;
+  const { currentPlayer, biddingState, teams, userTeam, auctionQueue } = state;
   const { currentBid, currentBidder, biddingActive, log } = biddingState;
 
   const myTeam = teams.find(t => t.id === userTeam);
@@ -105,6 +105,9 @@ const AuctionRoom = () => {
                       {currentPlayer.name}
                     </h2>
                     <p style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>{currentPlayer.role} • {currentPlayer.country}</p>
+                    <div style={{ display: 'inline-block', marginTop: '0.5rem', background: 'rgba(251, 191, 36, 0.2)', color: 'var(--accent-gold)', padding: '4px 12px', borderRadius: '4px', fontSize: '0.9rem', border: '1px solid var(--accent-gold)' }}>
+                      Set: {currentPlayer.poolName}
+                    </div>
                   </div>
                   <div style={{ textAlign: 'right', background: 'rgba(0,0,0,0.3)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
                     <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Base Price</div>
@@ -191,10 +194,33 @@ const AuctionRoom = () => {
 
       </div>
 
-      {/* Right Column: Log & Franchises */}
+      {/* Right Column: Log & Franchises & Upcoming */}
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         
-        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '400px' }}>
+        {currentPlayer && (
+          <div className="glass-panel" style={{ padding: '1.5rem' }}>
+            <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem', display: 'flex', justifyContent: 'space-between' }}>
+              <span>Upcoming in Set</span>
+              <span style={{ color: 'var(--accent-gold)' }}>{currentPlayer.poolName}</span>
+            </h3>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', maxHeight: '200px', overflowY: 'auto' }}>
+              {auctionQueue.filter(p => p.poolName === currentPlayer.poolName).slice(0, 5).map(p => (
+                <div key={p.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0.8rem', background: 'rgba(255,255,255,0.02)', borderRadius: '8px' }}>
+                  <div>
+                    <div style={{ fontWeight: 'bold' }}>{p.name}</div>
+                    <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>{p.role}</div>
+                  </div>
+                  <div style={{ fontFamily: 'monospace', color: 'var(--accent-gold)' }}>₹{(p.basePrice / 10000000).toFixed(2)} Cr</div>
+                </div>
+              ))}
+              {auctionQueue.filter(p => p.poolName === currentPlayer.poolName).length === 0 && (
+                <div style={{ textAlign: 'center', color: 'var(--text-secondary)', fontStyle: 'italic', padding: '1rem' }}>Last player in this set!</div>
+              )}
+            </div>
+          </div>
+        )}
+
+        <div className="glass-panel" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', height: '300px' }}>
           <h3 style={{ marginBottom: '1rem', borderBottom: '1px solid var(--glass-border)', paddingBottom: '0.5rem' }}>Live Activity</h3>
           <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
             {log.map((entry, i) => (
