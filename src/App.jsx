@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import AuctionRoom from './pages/AuctionRoom';
 import SquadView from './pages/SquadView';
 import Tournament from './pages/Tournament';
+import Retentions from './pages/Retentions';
 
 function App() {
   const { state, setPurse } = useContext(GameContext);
@@ -63,6 +64,7 @@ function App() {
           <Route path="/auction" element={<AuctionRoom />} />
           <Route path="/squad" element={<SquadView />} />
           <Route path="/tournament" element={<Tournament />} />
+          <Route path="/retentions" element={<Retentions />} />
         </Routes>
       </main>
     </div>

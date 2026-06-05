@@ -1,9 +1,11 @@
 import React, { useContext, useState, useEffect } from 'react';
 import { GameContext } from '../context/GameContext';
 import { Play, Trophy, Award, User, Calendar, Table, FastForward } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 const Tournament = () => {
-  const { state, updateStats, generateSchedule, processMatchResult, appendMatches, acceptTrade, rejectTrade } = useContext(GameContext);
+  const { state, updateStats, generateSchedule, processMatchResult, appendMatches, acceptTrade, rejectTrade, endSeason } = useContext(GameContext);
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('STANDINGS');
   const [matchResult, setMatchResult] = useState(null);
   
@@ -284,6 +286,20 @@ const Tournament = () => {
 
   const getTopRunScorers = () => Object.values(state.tournamentStats).sort((a,b) => b.runs - a.runs).slice(0, 5);
   const getTopWicketTakers = () => Object.values(state.tournamentStats).sort((a,b) => b.wickets - a.wickets).slice(0, 5);
+
+  const handleEndSeason = () => {
+    // Find champion
+    const finalMatch = state.schedule[state.schedule.length - 1];
+    let championId = null;
+    if (finalMatch && finalMatch.matchName === 'GRAND FINAL' && finalMatch.completed) {
+       const t1 = state.teams.find(t => t.id === finalMatch.team1);
+       const t2 = state.teams.find(t => t.id === finalMatch.team2);
+       championId = finalMatch.resultStr.includes(t1.name) || finalMatch.resultStr.includes(t1.shortName) ? t1.id : t2.id;
+    }
+    
+    endSeason(championId);
+    navigate('/retentions');
+  };
   
   if (state.schedule.length === 0) return <div style={{textAlign:'center', padding:'5rem'}}>Generating Tournament Schedule...</div>;
 
@@ -326,7 +342,10 @@ const Tournament = () => {
         </div>
       ) : (
         <div className="glass-panel" style={{ padding: '2rem', marginBottom: '2rem', textAlign: 'center' }}>
-          <h2 style={{ color: 'var(--accent-green)' }}>Tournament Completed!</h2>
+          <h2 style={{ color: 'var(--accent-green)', marginBottom: '1.5rem', fontSize: '2.5rem' }}>Tournament Completed!</h2>
+          <button className="glass-btn primary gold" style={{ fontSize: '1.2rem', padding: '1rem 2rem' }} onClick={handleEndSeason}>
+            Proceed to Next Season 🚀
+          </button>
         </div>
       )}
 

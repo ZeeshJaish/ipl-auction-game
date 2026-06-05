@@ -66,7 +66,10 @@ const getInitialState = () => ({
   currentMatchIndex: 0,
   pointsTable: {},
   tradeOffers: [],
-  newsItems: []
+  newsItems: [],
+  season: 2026,
+  legacyStats: [],
+  availablePlayers: [...initialPlayers]
 });
 
 export const GameContext = createContext();
@@ -430,6 +433,137 @@ const gameReducer = (state, action) => {
       };
     }
 
+    case 'END_SEASON': {
+      // 1. Log legacy stats
+      const championId = action.payload.championId; // Passed from Tournament component
+      const orangeCapPlayer = Object.values(state.tournamentStats).sort((a,b) => b.runs - a.runs)[0];
+      const purpleCapPlayer = Object.values(state.tournamentStats).sort((a,b) => b.wickets - a.wickets)[0];
+
+      const newLegacyStats = [...state.legacyStats, {
+        season: state.season,
+        champion: state.teams.find(t => t.id === championId)?.name,
+        orangeCap: orangeCapPlayer ? `${orangeCapPlayer.name} (${orangeCapPlayer.runs} runs)` : null,
+        purpleCap: purpleCapPlayer ? `${purpleCapPlayer.name} (${purpleCapPlayer.wickets} wkts)` : null
+      }];
+
+      // 2. Age players, check retirements, and reset form/injuries
+      let currentAvailablePlayers = [...state.availablePlayers];
+      
+      const updatePlayerStats = (player) => {
+        let p = { ...player };
+        p.age = (p.age || 25) + 1;
+        p.form = 'NORMAL';
+        p.injuredMatches = 0;
+
+        // Growth/Decline logic
+        if (p.age < 25) {
+           p.battingRating += Math.floor(Math.random() * 3);
+           p.bowlingRating += Math.floor(Math.random() * 3);
+        } else if (p.age > 34) {
+           p.battingRating -= Math.floor(Math.random() * 3);
+           p.bowlingRating -= Math.floor(Math.random() * 3);
+        }
+        
+        // Cap ratings
+        p.battingRating = Math.min(100, Math.max(50, p.battingRating));
+        p.bowlingRating = Math.min(100, Math.max(50, p.bowlingRating));
+        
+        return p;
+      };
+
+      currentAvailablePlayers = currentAvailablePlayers.map(updatePlayerStats)
+        .filter(p => !(p.age > 38 && Math.random() < 0.5)); // 50% chance to retire if > 38
+
+      const updatedTeams = state.teams.map(t => {
+        const agedSquad = t.squad.map(updatePlayerStats).filter(p => {
+          const retire = p.age > 38 && Math.random() < 0.5;
+          if (retire && p.id === action.payload.captainId) {
+             // Handle captain retirement silently
+          }
+          return !retire;
+        });
+
+        // AI Retentions: Keep top 4 rated players
+        let retained = [];
+        let released = [];
+        
+        if (t.id === state.userTeam) {
+          // User retentions handled via UI, for now we will just release everyone unless a separate step is made
+          // But wait, the user needs to select retentions. 
+          // So we should switch `auctionPhase` to 'RETENTIONS'
+        }
+
+        return { ...t, squad: agedSquad };
+      });
+
+      return {
+        ...state,
+        season: state.season + 1,
+        legacyStats: newLegacyStats,
+        auctionPhase: 'RETENTIONS',
+        teams: updatedTeams,
+        availablePlayers: currentAvailablePlayers
+      };
+    }
+
+    case 'FINALIZE_RETENTIONS': {
+      const { userRetentions } = action.payload; // array of player IDs
+      
+      let allAvailablePlayers = [...state.availablePlayers];
+
+      const finalizedTeams = state.teams.map(t => {
+        let retained = [];
+        let released = [];
+        
+        if (t.id === state.userTeam) {
+          retained = t.squad.filter(p => userRetentions.includes(p.id));
+          released = t.squad.filter(p => !userRetentions.includes(p.id));
+        } else {
+          // AI Retains top 4 players
+          const sortedSquad = [...t.squad].sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
+          retained = sortedSquad.slice(0, 4);
+          released = sortedSquad.slice(4);
+        }
+
+        // Deduct purse for retentions (e.g., 15Cr, 12Cr, 8Cr, 5Cr)
+        const retentionCosts = [150000000, 120000000, 80000000, 50000000];
+        let totalCost = 0;
+        retained.forEach((p, index) => {
+           totalCost += retentionCosts[index] || 50000000; // fallback 5Cr
+           // Reset boughtFor price
+           p.boughtFor = retentionCosts[index] || 50000000;
+        });
+
+        // Add released players back to pool
+        released.forEach(p => {
+          // Reset base price slightly based on rating? Let's just use original or random
+          p.basePrice = p.basePrice || 5000000;
+          allAvailablePlayers.push(p);
+        });
+
+        return { 
+          ...t, 
+          squad: retained, 
+          purse: 1000000000 - totalCost, // Reset purse to 100Cr minus retention cost
+          rtmCards: 2 // Reset RTM cards
+        };
+      });
+
+      return {
+        ...state,
+        teams: finalizedTeams,
+        availablePlayers: allAvailablePlayers,
+        auctionQueue: generateAuctionQueue(allAvailablePlayers),
+        auctionPhase: 'AUCTION',
+        tournamentStats: {},
+        schedule: [],
+        currentMatchIndex: 0,
+        pointsTable: {},
+        tradeOffers: [],
+        newsItems: []
+      };
+    }
+
     default:
       return state;
   }
@@ -463,6 +597,8 @@ export const GameProvider = ({ children }) => {
   const forceSell = (teamId, amount) => dispatch({ type: 'FORCE_SELL', payload: { teamId, amount } });
   const acceptTrade = (tradeId) => dispatch({ type: 'ACCEPT_TRADE', payload: tradeId });
   const rejectTrade = (tradeId) => dispatch({ type: 'REJECT_TRADE', payload: tradeId });
+  const endSeason = (championId) => dispatch({ type: 'END_SEASON', payload: { championId } });
+  const finalizeRetentions = (userRetentions) => dispatch({ type: 'FINALIZE_RETENTIONS', payload: { userRetentions } });
 
   return (
     <GameContext.Provider value={{ 
@@ -481,7 +617,9 @@ export const GameProvider = ({ children }) => {
       appendMatches, 
       forceSell,
       acceptTrade,
-      rejectTrade
+      rejectTrade,
+      endSeason,
+      finalizeRetentions
     }}>
       {children}
     </GameContext.Provider>
