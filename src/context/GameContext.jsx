@@ -17,6 +17,7 @@ const generateAuctionQueue = (players) => {
   let batsmen = [];
   let allrounders = [];
   let wicketkeepers = [];
+  let bowlers = [];
   let uncapped = [];
 
   const teamIds = initialTeams.map(t => t.id);
