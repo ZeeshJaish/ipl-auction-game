@@ -1,104 +1,13 @@
 --- src/index.css
 +++ src/index.css
-@@ -244,6 +244,11 @@
-     grid-template-columns: 1fr !important;
-+    gap: 1rem !important;
-+    padding-bottom: 280px !important;
+@@ -282,6 +282,10 @@
+   .dashboard-hero-title {
+     font-size: 2.2rem !important;
    }
- 
-   .player-card-content {
-     flex-direction: column !important;
-     text-align: center;
--    padding: 1.5rem !important;
-+    padding: 1rem !important;
-+    gap: 1rem !important;
-   }
-@@ -259,10 +264,15 @@
-   h1, h2, div, p {
-     word-wrap: break-word;
-   }
- 
-+  .player-card-content > div:first-child {
-+    width: 150px !important;
-+    height: 180px !important;
-+  }
 +
-   .player-card-content h2 {
--    font-size: 2rem !important;
-+    font-size: 1.8rem !important;
-   }
-   
-   .player-card-content .rating-container {
-     flex-direction: row !important;
--    gap: 1rem !important;
-+    gap: 0.5rem !important;
-+    margin-top: 1rem !important;
-   }
-@@ -271,7 +281,17 @@
-   .player-card-content > div > div > div:nth-child(2) {
-     text-align: center !important;
--    margin-top: 1rem;
-+    margin-top: 1rem !important;
-+    padding: 0.8rem !important;
++  h1 {
++    font-size: 2rem !important;
 +  }
-+
-+  .player-card-content .rating-container > div {
-+    padding: 0.8rem !important;
-+    flex: 1;
-+  }
-+
-+  .player-card-content .rating-container > div > div:nth-child(2) {
-+    font-size: 1.5rem !important;
-+    justify-content: center;
-   }
  
-@@ -282,10 +302,11 @@
    /* Sticky Bidding Console on Mobile */
    .bidding-console-wrapper {
-     position: fixed;
--    bottom: 0;
-+    bottom: env(safe-area-inset-bottom, 0);
-     left: 0;
-     width: 100%;
-     z-index: 1000;
--    background: rgba(7, 9, 14, 0.95);
-+    background: rgba(7, 9, 14, 0.98);
-     backdrop-filter: blur(20px);
-     border-top: 2px solid var(--accent-gold);
--    padding: 1rem;
-+    padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom, 0)) 1rem !important;
-     box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.8);
-     margin-top: 0 !important;
-@@ -298,24 +319,25 @@
-     gap: 1rem;
-     text-align: center;
-     padding: 0 !important;
-     border: none !important;
-     background: transparent !important;
-     box-shadow: none !important;
-   }
- 
-   .bidding-console-info {
-     width: 100%;
-   }
- 
-   .bidding-console-info div:nth-child(2) {
--    font-size: 2.5rem !important;
-+    font-size: 2rem !important;
-   }
- 
-   .bidding-console-buttons {
-     flex-direction: row !important;
-     width: 100%;
-     justify-content: center;
-     flex-wrap: wrap;
-+    gap: 0.5rem !important;
-   }
- 
-   .glass-btn {
-     flex: 1;
--    min-width: 100px;
-+    min-width: 45%;
-     padding: 10px !important;
-     font-size: 0.9rem !important;
-   }

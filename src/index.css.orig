@@ -302,10 +302,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 2.2rem !important;
   }
 
-  h1 {
-    font-size: 2rem !important;
-  }
-
   /* Sticky Bidding Console on Mobile */
   .bidding-console-wrapper {
     position: sticky;

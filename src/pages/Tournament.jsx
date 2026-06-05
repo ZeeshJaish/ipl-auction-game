@@ -417,36 +417,38 @@ const Tournament = () => {
         {/* Tab Content */}
         {activeTab === 'STANDINGS' && (
           <div className="glass-panel" style={{ padding: '1.5rem', overflowX: 'auto' }}>
-            <table style={{ width: '100%', textAlign: 'left', borderCollapse: 'collapse' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--glass-border)' }}>
-                  <th style={{ padding: '1rem' }}>Team</th>
-                  <th style={{ padding: '1rem' }}>P</th>
-                  <th style={{ padding: '1rem' }}>W</th>
-                  <th style={{ padding: '1rem' }}>L</th>
-                  <th style={{ padding: '1rem' }}>T</th>
-                  <th style={{ padding: '1rem' }}>NRR</th>
-                  <th style={{ padding: '1rem' }}>Pts</th>
-                </tr>
-              </thead>
-              <tbody>
-                {getStandings().map((row, i) => (
-                  <tr key={row.team.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i < 4 ? 'rgba(251, 191, 36, 0.05)' : 'transparent' }}>
-                    <td style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                      <span style={{ fontWeight: 'bold', width: '20px' }}>{i + 1}</span>
-                      <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: row.team.color }}></div>
-                      <span style={{ fontWeight: row.team.id === userTeam ? 'bold' : 'normal' }}>{row.team.name}</span>
-                    </td>
-                    <td style={{ padding: '1rem' }}>{row.played}</td>
-                    <td style={{ padding: '1rem' }}>{row.won}</td>
-                    <td style={{ padding: '1rem' }}>{row.lost}</td>
-                    <td style={{ padding: '1rem' }}>{row.tied}</td>
-                    <td style={{ padding: '1rem' }}>{row.nrr > 0 ? `+${row.nrr}` : row.nrr}</td>
-                    <td style={{ padding: '1rem', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--accent-gold)' }}>{row.points}</td>
+            <div className="table-responsive">
+              <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', marginTop: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', overflow: 'hidden' }}>
+                <thead>
+                  <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Pos</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Team</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>P</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>W</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>L</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Pts</th>
+                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>NRR</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {getStandings().map((row, i) => (
+                    <tr key={row.team.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i < 4 ? 'rgba(251, 191, 36, 0.05)' : 'transparent' }}>
+                      <td style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+                        <span style={{ fontWeight: 'bold', width: '20px' }}>{i + 1}</span>
+                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: row.team.color }}></div>
+                        <span style={{ fontWeight: row.team.id === userTeam ? 'bold' : 'normal' }}>{row.team.name}</span>
+                      </td>
+                      <td style={{ padding: '1rem' }}>{row.played}</td>
+                      <td style={{ padding: '1rem' }}>{row.won}</td>
+                      <td style={{ padding: '1rem' }}>{row.lost}</td>
+                      <td style={{ padding: '1rem' }}>{row.tied}</td>
+                      <td style={{ padding: '1rem' }}>{row.nrr > 0 ? `+${row.nrr}` : row.nrr}</td>
+                      <td style={{ padding: '1rem', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--accent-gold)' }}>{row.points}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         )}
 
