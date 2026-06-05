@@ -111,20 +111,42 @@ const Tournament = () => {
 
     const battingPerformances = batting11.map(p => ({ player: p, runs: 0, out: false }));
     const bowlingPerformances = bowling11.map(p => ({ player: p, wickets: 0, runsConceded: 0 }));
+    
+    const mainBowlers = bowlingPerformances.filter(p => p.player.role === 'Bowler' || p.player.role === 'All-Rounder').slice(0, 5);
 
     let runsLeft = totalRuns;
+    let highlights = [];
+
     for (let i = 0; i < 7 && runsLeft > 0; i++) {
       if (!battingPerformances[i]) break;
       const maxPoss = Math.floor((battingPerformances[i].player.battingRating / 100) * 80);
       const scored = Math.min(runsLeft, Math.floor(Math.random() * maxPoss) + 10);
       battingPerformances[i].runs = scored;
       runsLeft -= scored;
-      if (i < totalWickets) battingPerformances[i].out = true;
+      
+      if (scored > 40 && Math.random() > 0.3) {
+        highlights.push(`💥 Explosive hitting! ${battingPerformances[i].player.name} smashes it into the crowd!`);
+      } else if (scored > 25 && Math.random() > 0.5) {
+        highlights.push(`🏏 Beautiful timing by ${battingPerformances[i].player.name} to find the boundary.`);
+      }
+
+      if (i < totalWickets) {
+        battingPerformances[i].out = true;
+        const randomBowler = mainBowlers[Math.floor(Math.random() * mainBowlers.length)]?.player || bowling11[0];
+        const randomFielder = bowling11[Math.floor(Math.random() * bowling11.length)];
+        
+        if (Math.random() > 0.5 && randomFielder.id !== randomBowler.id) {
+          highlights.push(`🧤 Super catch by ${randomFielder.name} off ${randomBowler.name} to dismiss ${battingPerformances[i].player.name}!`);
+        } else if (Math.random() > 0.5) {
+          highlights.push(`🎯 Clean bowled! ${randomBowler.name} knocks over ${battingPerformances[i].player.name}'s stumps.`);
+        } else {
+          highlights.push(`☝️ Plumb LBW! ${randomBowler.name} traps ${battingPerformances[i].player.name} right in front.`);
+        }
+      }
     }
     if (runsLeft > 0 && battingPerformances.length > 0) battingPerformances[0].runs += runsLeft; 
 
     let wktsLeft = totalWickets;
-    const mainBowlers = bowlingPerformances.filter(p => p.player.role === 'Bowler' || p.player.role === 'All-Rounder').slice(0, 5);
     for (let b of mainBowlers) {
       if (wktsLeft > 0) {
         const w = Math.min(wktsLeft, Math.floor(Math.random() * 3) + (b.player.bowlingRating > 80 ? 1 : 0));
@@ -135,7 +157,7 @@ const Tournament = () => {
     }
     if (wktsLeft > 0 && mainBowlers.length > 0) mainBowlers[0].wickets += wktsLeft;
 
-    return { totalRuns, totalWickets, battingPerformances, bowlingPerformances };
+    return { totalRuns, totalWickets, battingPerformances, bowlingPerformances, highlights };
   };
 
   const executeMatch = (t1_11, t2_11, team1, team2) => {
@@ -168,7 +190,8 @@ const Tournament = () => {
     setMatchResult({
       inn1: { team: team1.shortName, ...inn1 },
       inn2: { team: team2.shortName, ...inn2 },
-      resultStr
+      resultStr,
+      highlights: [...inn1.highlights, ...inn2.highlights]
     });
 
     let allPerformances = [];
@@ -394,6 +417,20 @@ const Tournament = () => {
                 </div>
               </div>
             </div>
+
+            {/* Match Highlights */}
+            {matchResult.highlights && matchResult.highlights.length > 0 && (
+              <div style={{ marginTop: '2rem', padding: '1.5rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', borderLeft: '4px solid var(--accent-gold)' }}>
+                <h4 style={{ marginBottom: '1rem', color: 'var(--text-secondary)' }}>Key Moments</h4>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem' }}>
+                  {matchResult.highlights.map((h, i) => (
+                    <div key={i} style={{ fontSize: '0.95rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      {h}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
         )}
 

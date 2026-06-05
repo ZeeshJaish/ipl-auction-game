@@ -61,54 +61,69 @@ const AuctionRoom = () => {
       <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         
         {currentPlayer ? (
-          <div className="glass-panel player-card-content" style={{ padding: '2rem', display: 'flex', gap: '2rem', alignItems: 'center' }}>
-            <div style={{ 
-              width: '200px', 
-              height: '250px', 
-              background: 'linear-gradient(180deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)', 
-              borderRadius: '12px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'center',
-              alignItems: 'center',
-              border: '1px solid var(--glass-border)',
-              overflow: 'hidden'
-            }}>
-              {currentPlayer.image ? (
-                <img src={currentPlayer.image} alt={currentPlayer.name} style={{ width: '100%', height: '80%', objectFit: 'cover' }} />
-              ) : (
-                <User size={80} color="var(--text-secondary)" />
-              )}
-              <div style={{ marginTop: currentPlayer.image ? '0.5rem' : '1rem', background: currentPlayer.isOverseas ? 'var(--accent-red)' : 'var(--accent-blue)', padding: '4px 12px', borderRadius: '12px', fontSize: '0.8rem', fontWeight: 'bold' }}>
-                {currentPlayer.isOverseas ? 'OVERSEAS' : 'INDIAN'}
-              </div>
-            </div>
-
-            <div style={{ flex: 1 }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                <div>
-                  <h2 style={{ fontSize: '2.5rem', margin: 0, background: 'linear-gradient(to right, #fbbf24, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-                    {currentPlayer.name}
-                  </h2>
-                  <p style={{ fontSize: '1.2rem', color: 'var(--text-secondary)' }}>{currentPlayer.role} • {currentPlayer.country}</p>
+          <div className="glass-panel-3d" style={{ perspective: '1000px' }}>
+            <div className="glass-panel glass-panel-3d-inner player-card-content" style={{ padding: '3rem', display: 'flex', gap: '3rem', alignItems: 'center', background: 'linear-gradient(145deg, rgba(20,25,40,0.8), rgba(15,20,30,0.9))' }}>
+              <div style={{ 
+                width: '240px', 
+                height: '300px', 
+                background: 'linear-gradient(180deg, rgba(255,255,255,0.05) 0%, rgba(255,255,255,0.02) 100%)', 
+                borderRadius: '16px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'center',
+                alignItems: 'center',
+                border: '1px solid rgba(255,255,255,0.1)',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.5)',
+                overflow: 'hidden',
+                position: 'relative'
+              }}>
+                {currentPlayer.image ? (
+                  <img src={currentPlayer.image} alt={currentPlayer.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                ) : (
+                  <User size={100} color="var(--text-secondary)" />
+                )}
+                <div style={{ 
+                  position: 'absolute', 
+                  bottom: '1rem', 
+                  background: currentPlayer.isOverseas ? 'rgba(239, 68, 68, 0.9)' : 'rgba(59, 130, 246, 0.9)', 
+                  padding: '6px 16px', 
+                  borderRadius: '20px', 
+                  fontSize: '0.85rem', 
+                  fontWeight: '800',
+                  letterSpacing: '1px',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+                  backdropFilter: 'blur(4px)'
+                }}>
+                  {currentPlayer.isOverseas ? 'OVERSEAS' : 'INDIAN'}
                 </div>
-                <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Base Price</div>
-                  <div style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>₹{(currentPlayer.basePrice / 10000000).toFixed(2)} Cr</div>
-                </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '2rem', marginTop: '2rem' }}>
-                <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '8px', flex: 1 }}>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Batting Rating</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
-                    <TrendingUp color="var(--accent-green)" /> {currentPlayer.battingRating}
+              <div style={{ flex: 1 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <h2 style={{ fontSize: '3rem', margin: 0, background: 'linear-gradient(to right, #fbbf24, #f59e0b)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', letterSpacing: '1px' }}>
+                      {currentPlayer.name}
+                    </h2>
+                    <p style={{ fontSize: '1.3rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>{currentPlayer.role} • {currentPlayer.country}</p>
+                  </div>
+                  <div style={{ textAlign: 'right', background: 'rgba(0,0,0,0.3)', padding: '1rem 1.5rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.05)' }}>
+                    <div style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px' }}>Base Price</div>
+                    <div style={{ fontSize: '1.8rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>₹{(currentPlayer.basePrice / 10000000).toFixed(2)} Cr</div>
                   </div>
                 </div>
-                <div style={{ background: 'rgba(0,0,0,0.3)', padding: '1rem', borderRadius: '8px', flex: 1 }}>
-                  <div style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginBottom: '0.5rem' }}>Bowling Rating</div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '1.5rem', fontWeight: 'bold' }}>
-                    <TrendingDown color="var(--accent-blue)" /> {currentPlayer.bowlingRating}
+
+                <div style={{ display: 'flex', gap: '2rem', marginTop: '3rem' }}>
+                  <div style={{ background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.2)', padding: '1.5rem', borderRadius: '12px', flex: 1 }}>
+                    <div style={{ color: 'var(--accent-green)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>Batting Rating</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '2rem', fontWeight: '800' }}>
+                      <TrendingUp color="var(--accent-green)" size={32} /> {currentPlayer.battingRating}
+                    </div>
+                  </div>
+                  <div style={{ background: 'rgba(59, 130, 246, 0.1)', border: '1px solid rgba(59, 130, 246, 0.2)', padding: '1.5rem', borderRadius: '12px', flex: 1 }}>
+                    <div style={{ color: 'var(--accent-blue)', fontSize: '0.95rem', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '0.8rem' }}>Bowling Rating</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', fontSize: '2rem', fontWeight: '800' }}>
+                      <TrendingDown color="var(--accent-blue)" size={32} /> {currentPlayer.bowlingRating}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -121,16 +136,16 @@ const AuctionRoom = () => {
         )}
 
         {/* Bidding Console */}
-        <div className="bidding-console-wrapper">
-          <div className="glass-panel bidding-console" style={{ padding: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <div className="bidding-console-wrapper" style={{ marginTop: 'auto' }}>
+          <div className="glass-panel bidding-console" style={{ padding: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'linear-gradient(90deg, rgba(20,25,40,0.8), rgba(15,20,30,0.95))', borderTop: '4px solid var(--accent-gold)' }}>
             <div className="bidding-console-info">
-              <div style={{ color: 'var(--text-secondary)', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '1px' }}>Current Bid</div>
-              <div style={{ fontSize: '3rem', fontWeight: 'bold', color: currentBidder === userTeam ? 'var(--accent-green)' : 'white' }}>
-                ₹{(currentBid / 10000000).toFixed(2)} Cr
+              <div style={{ color: 'var(--accent-gold)', fontSize: '1.1rem', textTransform: 'uppercase', letterSpacing: '2px', fontWeight: 'bold', marginBottom: '0.5rem' }}>Current Bid</div>
+              <div style={{ fontSize: '3.5rem', fontWeight: '800', color: currentBidder === userTeam ? 'var(--accent-green)' : 'white', textShadow: currentBidder === userTeam ? '0 0 20px rgba(16, 185, 129, 0.4)' : 'none' }}>
+                ₹{(currentBid / 10000000).toFixed(2)} <span style={{ fontSize: '2rem' }}>Cr</span>
               </div>
               {currentBidder && (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--accent-gold)' }}>
-                  <Star size={16} /> Highest Bidder: {teams.find(t => t.id === currentBidder)?.shortName}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.8rem', color: 'var(--text-secondary)', marginTop: '0.5rem', fontSize: '1.1rem' }}>
+                  <Star size={18} color="var(--accent-gold)" /> Highest Bidder: <strong style={{ color: 'white' }}>{teams.find(t => t.id === currentBidder)?.name}</strong>
                 </div>
               )}
             </div>

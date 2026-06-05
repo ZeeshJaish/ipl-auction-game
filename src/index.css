@@ -1,16 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@400;500;700&display=swap');
 
 :root {
-  --bg-dark: #0a0e17;
-  --bg-card: rgba(20, 25, 40, 0.6);
-  --glass-border: rgba(255, 255, 255, 0.1);
-  --text-primary: #ffffff;
+  --bg-dark: #07090e;
+  --bg-card: rgba(15, 20, 30, 0.45);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-highlight: rgba(255, 255, 255, 0.15);
+  --text-primary: #f8fafc;
   --text-secondary: #94a3b8;
   --accent-gold: #fbbf24;
   --accent-blue: #3b82f6;
   --accent-green: #10b981;
   --accent-red: #ef4444;
-  --glow-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
+  --accent-purple: #8b5cf6;
+  --glow-shadow: 0 0 20px rgba(59, 130, 246, 0.4);
   
   --font-heading: 'Outfit', sans-serif;
   --font-body: 'Inter', sans-serif;
@@ -25,12 +27,15 @@
 body {
   background-color: var(--bg-dark);
   background-image: 
-    radial-gradient(circle at 15% 50%, rgba(59, 130, 246, 0.15), transparent 25%),
-    radial-gradient(circle at 85% 30%, rgba(251, 191, 36, 0.1), transparent 25%);
+    radial-gradient(circle at 10% 20%, rgba(59, 130, 246, 0.1), transparent 30%),
+    radial-gradient(circle at 90% 80%, rgba(139, 92, 246, 0.1), transparent 30%),
+    radial-gradient(circle at 50% 50%, rgba(251, 191, 36, 0.05), transparent 50%);
+  background-attachment: fixed;
   color: var(--text-primary);
   font-family: var(--font-body);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -40,16 +45,35 @@ h1, h2, h3, h4, h5, h6 {
 /* Glassmorphism Utilities */
 .glass-panel {
   background: var(--bg-card);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 16px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), inset 0 1px 0 0 var(--glass-highlight);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel:hover {
+  border-color: rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 48px 0 rgba(0, 0, 0, 0.6), inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
+}
+
+.glass-panel-3d {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.glass-panel-3d-inner {
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-panel-3d:hover .glass-panel-3d-inner {
+  transform: rotateX(2deg) rotateY(-2deg) translateZ(10px);
 }
 
 .glass-btn {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(8px);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   color: var(--text-primary);
   padding: 10px 20px;
@@ -57,16 +81,34 @@ h1, h2, h3, h4, h5, h6 {
   cursor: pointer;
   font-family: var(--font-heading);
   font-weight: 600;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: uppercase;
-  letter-spacing: 1px;
+  letter-spacing: 1.5px;
+  position: relative;
+  overflow: hidden;
+}
+
+.glass-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+  transform: skewX(-20deg);
+  transition: 0.5s;
+}
+
+.glass-btn:hover:not(:disabled)::after {
+  left: 150%;
 }
 
 .glass-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.1);
   border-color: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .glass-btn.primary {
@@ -77,24 +119,25 @@ h1, h2, h3, h4, h5, h6 {
 
 .glass-btn.primary:hover:not(:disabled) {
   background: linear-gradient(135deg, #60a5fa, var(--accent-blue));
-  box-shadow: 0 0 25px rgba(59, 130, 246, 0.8);
+  box-shadow: 0 0 30px rgba(59, 130, 246, 0.6);
 }
 
 .glass-btn.gold {
   background: linear-gradient(135deg, var(--accent-gold), #d97706);
   border: none;
   color: #000;
-  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
 }
 
 .glass-btn.gold:hover:not(:disabled) {
   background: linear-gradient(135deg, #fcd34d, var(--accent-gold));
-  box-shadow: 0 0 25px rgba(251, 191, 36, 0.7);
+  box-shadow: 0 0 30px rgba(251, 191, 36, 0.6);
 }
 
 .glass-btn:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+  transform: none !important;
 }
 
 /* Layout */
@@ -110,11 +153,12 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
   padding: 1rem 2rem;
   border-bottom: 1px solid var(--glass-border);
-  background: rgba(10, 14, 23, 0.8);
-  backdrop-filter: blur(10px);
+  background: rgba(7, 9, 14, 0.7);
+  backdrop-filter: blur(16px);
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.5);
 }
 
 .navbar-brand {
@@ -137,8 +181,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes pulse {
@@ -148,8 +192,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .animate-fade-in {
-  animation: fadeIn 0.5s ease forwards;
+  animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
+
+.stagger-1 { animation-delay: 0.1s; }
+.stagger-2 { animation-delay: 0.2s; }
+.stagger-3 { animation-delay: 0.3s; }
+.stagger-4 { animation-delay: 0.4s; }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
@@ -157,16 +206,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg-dark);
+  background: rgba(0,0,0,0.3);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.3);
 }
 
 /* Responsive Design */
@@ -211,11 +260,11 @@ h1, h2, h3, h4, h5, h6 {
     left: 0;
     width: 100%;
     z-index: 1000;
-    background: rgba(10, 14, 23, 0.95);
-    backdrop-filter: blur(15px);
+    background: rgba(7, 9, 14, 0.95);
+    backdrop-filter: blur(20px);
     border-top: 1px solid var(--glass-border);
     padding: 1rem;
-    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.6);
   }
 
   .bidding-console {
@@ -248,7 +297,6 @@ h1, h2, h3, h4, h5, h6 {
     font-size: 1rem !important;
   }
 
-  /* Add padding to bottom of page to prevent sticky overlap */
   .auction-grid {
     padding-bottom: 160px;
   }
