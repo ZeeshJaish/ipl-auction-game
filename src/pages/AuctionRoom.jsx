@@ -4,7 +4,7 @@ import { useAIBidding } from '../hooks/useAIBidding';
 import { Gavel, User, DollarSign, TrendingUp, TrendingDown, Star } from 'lucide-react';
 
 const AuctionRoom = () => {
-  const { state, placeBid, sellPlayer, nextPlayer } = useContext(GameContext);
+  const { state, placeBid, sellPlayer, nextPlayer, forceSell } = useContext(GameContext);
   useAIBidding(state, placeBid);
 
   if (!state.userTeam) {
@@ -21,6 +21,37 @@ const AuctionRoom = () => {
     const nextBid = currentBid === currentPlayer.basePrice && currentBidder === null ? currentBid : currentBid + 2500000;
     if (nextBid <= myTeam.purse) {
       placeBid(userTeam, nextBid);
+    }
+  };
+
+  const handleSuperBid = () => {
+    if (!biddingActive || !currentPlayer) return;
+
+    let maxAIBid = currentPlayer.basePrice;
+    teams.forEach(team => {
+      if (team.id === userTeam) return;
+      
+      let baseValuation = (currentPlayer.battingRating + currentPlayer.bowlingRating) * 500000;
+      baseValuation *= 1.4; // Pessimistic max valuation
+      
+      const roleCount = team.squad.filter(p => p.role === currentPlayer.role).length;
+      if (roleCount > 4) baseValuation *= 0.5;
+      if (roleCount < 2) baseValuation *= 1.5;
+
+      const overseasCount = team.squad.filter(p => p.isOverseas).length;
+      if (currentPlayer.isOverseas && overseasCount >= 8) return; 
+
+      if (baseValuation > team.purse) baseValuation = team.purse;
+      if (baseValuation > maxAIBid) maxAIBid = baseValuation;
+    });
+
+    maxAIBid = Math.floor(maxAIBid / 2500000) * 2500000;
+    const finalPrice = Math.max(currentBid, maxAIBid + 2500000);
+
+    if (myTeam.purse >= finalPrice) {
+      forceSell(userTeam, finalPrice);
+    } else {
+      alert(`Insufficient funds! AI is willing to bid up to ₹${(maxAIBid/10000000).toFixed(2)} Cr, you need at least ₹${(finalPrice/10000000).toFixed(2)} Cr to Super Bid.`);
     }
   };
 
@@ -112,6 +143,15 @@ const AuctionRoom = () => {
                 disabled={!biddingActive || currentBidder === userTeam || (currentBid + 2500000) > myTeam.purse}
               >
                 <Gavel style={{ marginRight: '8px' }} size={20} /> Place Bid
+              </button>
+              <button 
+                className="glass-btn" 
+                style={{ fontSize: '1rem', padding: '15px 20px', background: 'rgba(16, 185, 129, 0.2)', borderColor: 'var(--accent-green)' }}
+                onClick={handleSuperBid}
+                disabled={!biddingActive || currentBidder === userTeam}
+                title="Instantly simulates all AI bids and buys player for you"
+              >
+                Super Bid
               </button>
               <button 
                 className="glass-btn" 

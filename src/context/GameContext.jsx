@@ -107,6 +107,33 @@ const gameReducer = (state, action) => {
         }
       };
 
+    case 'FORCE_SELL': {
+      const { teamId, amount } = action.payload;
+      
+      const updatedTeams2 = state.teams.map(t => {
+        if (t.id === teamId) {
+          return {
+            ...t,
+            purse: t.purse - amount,
+            squad: [...t.squad, { ...state.currentPlayer, boughtFor: amount }]
+          };
+        }
+        return t;
+      });
+
+      return {
+        ...state,
+        teams: updatedTeams2,
+        biddingState: {
+          ...state.biddingState,
+          biddingActive: false,
+          currentBid: amount,
+          currentBidder: teamId,
+          log: [`SUPER BID! ${state.currentPlayer.name} secured by ${state.teams.find(t => t.id === teamId).shortName} for ₹${(amount / 10000000).toFixed(2)} Cr`, ...state.biddingState.log]
+        }
+      };
+    }
+
     case 'SET_PURSE':
       return {
         ...state,
@@ -234,9 +261,10 @@ export const GameProvider = ({ children }) => {
   const generateSchedule = () => dispatch({ type: 'GENERATE_SCHEDULE' });
   const processMatchResult = (payload) => dispatch({ type: 'PROCESS_MATCH_RESULT', payload });
   const appendMatches = (matches) => dispatch({ type: 'APPEND_MATCHES', payload: matches });
+  const forceSell = (teamId, amount) => dispatch({ type: 'FORCE_SELL', payload: { teamId, amount } });
 
   return (
-    <GameContext.Provider value={{ state, selectTeam, nextPlayer, placeBid, sellPlayer, setPurse, updateStats, generateSchedule, processMatchResult, appendMatches }}>
+    <GameContext.Provider value={{ state, selectTeam, nextPlayer, placeBid, sellPlayer, setPurse, updateStats, generateSchedule, processMatchResult, appendMatches, forceSell }}>
       {children}
     </GameContext.Provider>
   );
