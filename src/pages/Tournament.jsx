@@ -12,7 +12,6 @@ const Tournament = () => {
   // Tactical Pause State
   const [tacticalPause, setTacticalPause] = useState(null);
 
-  const myTeam = state.teams.find(t => t.id === state.userTeam);
   // Playing 11 Selection State
   const [showSelectionModal, setShowSelectionModal] = useState(false);
   const [selected11, setSelected11] = useState([]);
