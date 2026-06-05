@@ -12,28 +12,41 @@ const shuffleArray = (array) => {
   return newArray;
 };
 
-const initialState = {
-  userTeam: null, // Team ID chosen by user
-  teams: initialTeams.map(t => ({ ...t, squad: [] })), // Attach empty squad
-  auctionQueue: shuffleArray(initialPlayers),
+const getInitialState = () => ({
+  activeSlot: null,
+  userTeam: null,
+  teams: initialTeams.map(t => ({ ...t, squad: [] })),
+  auctionQueue: shuffleArray([...initialPlayers]),
   currentPlayer: null,
   biddingState: {
     currentBid: 0,
-    currentBidder: null, // Team ID
+    currentBidder: null,
     biddingActive: false,
-    log: [] // Array of string messages
+    log: []
   },
-  auctionPhase: 'SETUP', // SETUP, AUCTION, TOURNAMENT
-  tournamentStats: {}, // { playerId: { runs, wickets, highestScore, matchesPlayed, name, team, image } }
+  auctionPhase: 'SETUP',
+  tournamentStats: {},
   schedule: [],
   currentMatchIndex: 0,
   pointsTable: {}
-};
+});
 
 export const GameContext = createContext();
 
 const gameReducer = (state, action) => {
   switch (action.type) {
+    case 'LOAD_GAME':
+      return {
+        ...action.payload.savedState,
+        activeSlot: action.payload.slotId
+      };
+      
+    case 'NEW_GAME':
+      return {
+        ...getInitialState(),
+        activeSlot: action.payload.slotId
+      };
+
     case 'SELECT_TEAM':
       return {
         ...state,
@@ -73,7 +86,6 @@ const gameReducer = (state, action) => {
     case 'SELL_PLAYER':
       const { currentBidder, currentBid } = state.biddingState;
       
-      // If no bidder, player is unsold
       if (!currentBidder) {
         return {
           ...state,
@@ -85,7 +97,6 @@ const gameReducer = (state, action) => {
         };
       }
 
-      // Add to squad and deduct purse
       const updatedTeams = state.teams.map(t => {
         if (t.id === currentBidder) {
           return {
@@ -146,7 +157,7 @@ const gameReducer = (state, action) => {
 
     case 'UPDATE_STATS': {
       const newStats = { ...state.tournamentStats };
-      const { playerPerformances } = action.payload; // Array of { player, runs, wickets }
+      const { playerPerformances } = action.payload;
       
       playerPerformances.forEach(perf => {
         const id = perf.player.id;
@@ -154,7 +165,7 @@ const gameReducer = (state, action) => {
           newStats[id] = {
             runs: 0, wickets: 0, highestScore: 0, matchesPlayed: 0,
             name: perf.player.name,
-            team: perf.player.teamName, // Will pass teamName down
+            team: perf.player.teamName,
             image: perf.player.image
           };
         }
@@ -173,7 +184,6 @@ const gameReducer = (state, action) => {
     }
 
     case 'GENERATE_SCHEDULE': {
-      // Single Round Robin
       let matches = [];
       const t = state.teams.map(team => team.id);
       for (let i = 0; i < t.length; i++) {
@@ -181,10 +191,8 @@ const gameReducer = (state, action) => {
           matches.push({ team1: t[i], team2: t[j], completed: false, resultStr: null });
         }
       }
-      // Shuffle schedule
       matches = shuffleArray(matches);
       
-      // Init points table
       let pTable = {};
       state.teams.forEach(team => {
         pTable[team.id] = { played: 0, won: 0, lost: 0, tied: 0, points: 0, nrr: 0, runDiff: 0 };
@@ -210,7 +218,7 @@ const gameReducer = (state, action) => {
         p.tied += tied;
         p.points += (won * 2) + (tied * 1);
         p.runDiff += (runsScored - runsConceded);
-        p.nrr = (p.runDiff / (p.played * 20)).toFixed(3); // Simplified NRR proxy
+        p.nrr = (p.runDiff / (p.played * 20)).toFixed(3);
       };
 
       if (isTie) {
@@ -249,9 +257,20 @@ const gameReducer = (state, action) => {
 };
 
 export const GameProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(gameReducer, initialState);
+  const [state, dispatch] = useReducer(gameReducer, getInitialState());
 
-  // Expose helpful actions
+  // Autosave Effect
+  useEffect(() => {
+    if (state.activeSlot) {
+      const saveTimer = setTimeout(() => {
+        localStorage.setItem(state.activeSlot, JSON.stringify(state));
+      }, 500); // 500ms debounce
+      return () => clearTimeout(saveTimer);
+    }
+  }, [state]);
+
+  const loadGame = (slotId, savedState) => dispatch({ type: 'LOAD_GAME', payload: { slotId, savedState } });
+  const startNewGame = (slotId) => dispatch({ type: 'NEW_GAME', payload: { slotId } });
   const selectTeam = (teamId) => dispatch({ type: 'SELECT_TEAM', payload: teamId });
   const nextPlayer = () => dispatch({ type: 'NEXT_PLAYER' });
   const placeBid = (teamId, amount) => dispatch({ type: 'PLACE_BID', payload: { teamId, amount } });
@@ -264,8 +283,23 @@ export const GameProvider = ({ children }) => {
   const forceSell = (teamId, amount) => dispatch({ type: 'FORCE_SELL', payload: { teamId, amount } });
 
   return (
-    <GameContext.Provider value={{ state, selectTeam, nextPlayer, placeBid, sellPlayer, setPurse, updateStats, generateSchedule, processMatchResult, appendMatches, forceSell }}>
+    <GameContext.Provider value={{ 
+      state, 
+      loadGame,
+      startNewGame,
+      selectTeam, 
+      nextPlayer, 
+      placeBid, 
+      sellPlayer, 
+      setPurse, 
+      updateStats, 
+      generateSchedule, 
+      processMatchResult, 
+      appendMatches, 
+      forceSell 
+    }}>
       {children}
     </GameContext.Provider>
   );
 };
+
