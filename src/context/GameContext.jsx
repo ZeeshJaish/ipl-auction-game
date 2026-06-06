@@ -220,9 +220,14 @@ const gameReducer = (state, action) => {
 
     case 'GOD_MODE_DRAFT': {
       const { playerId, teamId } = action.payload;
+      
+      // Check if the player is the currentPlayer (already pulled from queue)
+      const isCurrentPlayer = state.currentPlayer && state.currentPlayer.id === playerId;
       const playerIndex = state.auctionQueue.findIndex(p => p.id === playerId);
-      if (playerIndex === -1) return state;
-      const player = state.auctionQueue[playerIndex];
+      
+      if (!isCurrentPlayer && playerIndex === -1) return state;
+      
+      const player = isCurrentPlayer ? state.currentPlayer : state.auctionQueue[playerIndex];
       
       const updatedTeams = state.teams.map(t => {
         if (t.id === teamId) {
@@ -235,13 +240,17 @@ const gameReducer = (state, action) => {
         return t;
       });
       
-      const newQueue = [...state.auctionQueue];
-      newQueue.splice(playerIndex, 1);
+      let newQueue = [...state.auctionQueue];
+      if (!isCurrentPlayer) {
+        newQueue.splice(playerIndex, 1);
+      }
       
       return {
         ...state,
         teams: updatedTeams,
-        auctionQueue: newQueue
+        auctionQueue: newQueue,
+        currentPlayer: isCurrentPlayer ? null : state.currentPlayer,
+        biddingState: isCurrentPlayer ? { ...state.biddingState, biddingActive: false } : state.biddingState
       };
     }
 
@@ -690,6 +699,8 @@ export const GameProvider = ({ children }) => {
       processMatchResult, 
       appendMatches, 
       forceSell,
+      godModeDraft,
+      autoSimulateAuction,
       acceptTrade,
       rejectTrade,
       endSeason,
