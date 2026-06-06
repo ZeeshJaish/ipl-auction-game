@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useNavigate } from 'react-router-dom';
+import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { GameContext } from './context/GameContext';
 import { Trophy, Users, Gavel, Edit3, Save } from 'lucide-react';
@@ -67,6 +67,7 @@ function App() {
           <Route path="/tournament" element={<Tournament />} />
           <Route path="/retentions" element={<Retentions />} />
           <Route path="/godmode" element={<GodMode />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </main>
     </div>
