@@ -651,11 +651,27 @@ const gameReducer = (state, action) => {
 };
 
 export const GameProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(gameReducer, getInitialState());
+  const [state, dispatch] = useReducer(gameReducer, null, () => {
+    // On app startup, try to restore the last active session
+    try {
+      const lastSlot = localStorage.getItem('ipl_last_active_slot');
+      if (lastSlot) {
+        const savedData = localStorage.getItem(lastSlot);
+        if (savedData) {
+          const parsed = JSON.parse(savedData);
+          return { ...parsed, activeSlot: lastSlot };
+        }
+      }
+    } catch (e) {
+      console.warn('Failed to restore session:', e);
+    }
+    return getInitialState();
+  });
 
   // Autosave Effect
   useEffect(() => {
     if (state.activeSlot) {
+      localStorage.setItem('ipl_last_active_slot', state.activeSlot);
       const saveTimer = setTimeout(() => {
         localStorage.setItem(state.activeSlot, JSON.stringify(state));
       }, 500); // 500ms debounce

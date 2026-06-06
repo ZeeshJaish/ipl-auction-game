@@ -1,5 +1,5 @@
-import { Routes, Route, Link, useNavigate, Navigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { Routes, Route, Link, useNavigate, Navigate, useLocation } from 'react-router-dom';
+import { useContext, useEffect, useRef } from 'react';
 import { GameContext } from './context/GameContext';
 import { Trophy, Users, Gavel, Edit3, Save } from 'lucide-react';
 import SaveManager from './pages/SaveManager';
@@ -13,6 +13,19 @@ import GodMode from './pages/GodMode';
 function App() {
   const { state, setPurse } = useContext(GameContext);
   const navigate = useNavigate();
+  const location = useLocation();
+  const hasAutoRedirected = useRef(false);
+
+  // Auto-redirect to the correct page when session is restored from localStorage
+  useEffect(() => {
+    if (hasAutoRedirected.current) return;
+    if (state.activeSlot && state.userTeam && location.pathname === '/') {
+      hasAutoRedirected.current = true;
+      if (state.auctionPhase === 'SETUP') navigate('/dashboard', { replace: true });
+      else if (state.auctionPhase === 'AUCTION') navigate('/auction', { replace: true });
+      else navigate('/tournament', { replace: true });
+    }
+  }, [state.activeSlot, state.userTeam, state.auctionPhase]);
 
   return (
     <div className="app-container">
