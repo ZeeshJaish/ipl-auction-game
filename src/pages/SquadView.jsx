@@ -33,23 +33,32 @@ const SquadView = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '1.5rem' }}>
           {myTeam.squad.map((player) => (
             <div key={player.id} className="glass-panel" style={{ padding: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-              <div style={{ 
-                width: '60px', 
-                height: '60px', 
-                borderRadius: '8px', 
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '8px',
                 background: 'rgba(255,255,255,0.05)',
                 display: 'flex',
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                overflow: 'hidden',
+                flexShrink: 0
               }}>
-                <User size={30} />
+                {player.image
+                  ? <img src={player.image} alt={player.name} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <User size={30} />}
               </div>
-              <div style={{ flex: 1 }}>
-                <h3 style={{ margin: 0, fontSize: '1.1rem' }}>{player.name}</h3>
-                <div style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
-                  {player.role} • {player.isOverseas ? 'OS' : 'IND'}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                  <h3 style={{ margin: 0, fontSize: '1rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{player.name}</h3>
+                  {player.isOverseas && <span style={{ fontSize: '0.65rem', background: 'var(--accent-red)', padding: '2px 5px', borderRadius: '4px', flexShrink: 0 }}>OS</span>}
                 </div>
-                <div style={{ marginTop: '0.5rem', fontSize: '0.9rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>
+                <div style={{ fontSize: '0.78rem', color: 'var(--text-secondary)', marginTop: '2px' }}>{player.role}</div>
+                <div style={{ display: 'flex', gap: '0.75rem', marginTop: '6px', fontSize: '0.8rem' }}>
+                  <span style={{ color: 'var(--accent-green)' }}>BAT {player.battingRating}</span>
+                  <span style={{ color: 'var(--accent-blue)' }}>BOWL {player.bowlingRating}</span>
+                </div>
+                <div style={{ marginTop: '4px', fontSize: '0.85rem', fontWeight: 'bold', color: 'var(--accent-gold)' }}>
                   ₹{(player.boughtFor / 10000000).toFixed(2)} Cr
                 </div>
               </div>

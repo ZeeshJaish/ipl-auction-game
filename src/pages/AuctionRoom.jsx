@@ -9,6 +9,13 @@ const AuctionRoom = () => {
   const { state, placeBid, sellPlayer, nextPlayer, forceSell } = useContext(GameContext);
   useAIBidding(state, placeBid);
 
+  // Auto-navigate when auction finishes
+  useEffect(() => {
+    if (state.auctionPhase === 'TOURNAMENT') {
+      navigate('/tournament', { replace: true });
+    }
+  }, [state.auctionPhase]);
+
   if (!state.userTeam) {
     return <div style={{ textAlign: 'center', marginTop: '5rem' }}>Please select a team from the Dashboard first.</div>;
   }
@@ -184,7 +191,20 @@ const AuctionRoom = () => {
           </div>
         ) : (
           <div className="glass-panel" style={{ padding: '4rem', textAlign: 'center' }}>
-            <h2>Auction Finished or No Player on Block</h2>
+            {state.auctionQueue.length === 0 ? (
+              <>
+                <h2 style={{ color: 'var(--accent-gold)', marginBottom: '1rem' }}>Auction Complete!</h2>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>All players have been auctioned. Time to play!</p>
+                <button className="glass-btn primary gold" style={{ fontSize: '1.2rem', padding: '1rem 2.5rem' }} onClick={() => navigate('/tournament')}>
+                  Start Season →
+                </button>
+              </>
+            ) : (
+              <>
+                <h2 style={{ marginBottom: '1rem' }}>Ready to Begin</h2>
+                <p style={{ color: 'var(--text-secondary)' }}>Click <strong>Next Player</strong> below to put the first player on the block.</p>
+              </>
+            )}
           </div>
         )}
 

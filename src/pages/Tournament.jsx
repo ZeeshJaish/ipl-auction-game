@@ -90,6 +90,7 @@ const Tournament = () => {
 
   const autoPick11 = (squad) => {
     let availableSquad = squad.filter(p => !p.injuredMatches || p.injuredMatches <= 0);
+    if (availableSquad.length < 11) availableSquad = [...squad]; // fallback if too many injured
     let wks = availableSquad.filter(p => p.role === 'Wicket-Keeper').sort((a,b) => b.battingRating - a.battingRating);
     let bats = availableSquad.filter(p => p.role === 'Batsman').sort((a,b) => b.battingRating - a.battingRating);
     let bowls = availableSquad.filter(p => p.role === 'Bowler').sort((a,b) => b.bowlingRating - a.bowlingRating);
@@ -101,12 +102,28 @@ const Tournament = () => {
       ...(bowls.slice(0,4)),
       ...(alls.slice(0,2))
     ];
-    
+
     if (selected.length < 11) {
       const remaining = availableSquad.filter(p => !selected.find(s => s.id === p.id)).sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
       selected = [...selected, ...remaining.slice(0, 11 - selected.length)];
     }
-    return selected;
+
+    // Enforce max 4 overseas in playing XI
+    let overseasCount = selected.filter(p => p.isOverseas).length;
+    if (overseasCount > 4) {
+      const domesticBench = availableSquad
+        .filter(p => !p.isOverseas && !selected.find(s => s.id === p.id))
+        .sort((a,b) => (b.battingRating + b.bowlingRating) - (a.battingRating + a.bowlingRating));
+      let di = 0;
+      for (let i = selected.length - 1; i >= 0 && overseasCount > 4 && di < domesticBench.length; i--) {
+        if (selected[i].isOverseas) {
+          selected[i] = domesticBench[di++];
+          overseasCount--;
+        }
+      }
+    }
+
+    return selected.slice(0, 11);
   };
 
   const simulateInnings = (batting11, bowling11, battingCaptainId, bowlingCaptainId) => {
@@ -421,29 +438,32 @@ const Tournament = () => {
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', marginTop: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '8px', overflow: 'hidden' }}>
                 <thead>
                   <tr style={{ background: 'rgba(255,255,255,0.05)' }}>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Pos</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Team</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>P</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>W</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>L</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>Pts</th>
-                    <th style={{ padding: '1rem', color: 'var(--text-secondary)' }}>NRR</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', minWidth: '200px' }}>Team</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>P</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>W</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>L</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>T</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>Pts</th>
+                    <th style={{ padding: '0.75rem 1rem', color: 'var(--text-secondary)', textAlign: 'center' }}>NRR</th>
                   </tr>
                 </thead>
                 <tbody>
                   {getStandings().map((row, i) => (
                     <tr key={row.team.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)', background: i < 4 ? 'rgba(251, 191, 36, 0.05)' : 'transparent' }}>
-                      <td style={{ padding: '1rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-                        <span style={{ fontWeight: 'bold', width: '20px' }}>{i + 1}</span>
-                        <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: row.team.color }}></div>
-                        <span style={{ fontWeight: row.team.id === userTeam ? 'bold' : 'normal' }}>{row.team.name}</span>
+                      <td style={{ padding: '0.75rem 1rem' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                          <span style={{ fontWeight: 'bold', width: '20px', color: i < 4 ? 'var(--accent-gold)' : 'var(--text-secondary)', fontSize: '0.9rem' }}>{i + 1}</span>
+                          <div style={{ width: '12px', height: '12px', borderRadius: '50%', background: row.team.color, flexShrink: 0 }}></div>
+                          <span style={{ fontWeight: row.team.id === userTeam ? 'bold' : 'normal' }}>{row.team.name}</span>
+                          {i < 4 && <span style={{ fontSize: '0.7rem', background: 'rgba(251,191,36,0.2)', color: 'var(--accent-gold)', padding: '2px 6px', borderRadius: '4px' }}>Q</span>}
+                        </div>
                       </td>
-                      <td style={{ padding: '1rem' }}>{row.played}</td>
-                      <td style={{ padding: '1rem' }}>{row.won}</td>
-                      <td style={{ padding: '1rem' }}>{row.lost}</td>
-                      <td style={{ padding: '1rem' }}>{row.tied}</td>
-                      <td style={{ padding: '1rem' }}>{row.nrr > 0 ? `+${row.nrr}` : row.nrr}</td>
-                      <td style={{ padding: '1rem', fontWeight: 'bold', fontSize: '1.2rem', color: 'var(--accent-gold)' }}>{row.points}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>{row.played}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: 'var(--accent-green)' }}>{row.won}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: 'var(--accent-red)' }}>{row.lost}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center' }}>{row.tied}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center', fontWeight: 'bold', fontSize: '1.1rem', color: 'var(--accent-gold)' }}>{row.points}</td>
+                      <td style={{ padding: '0.75rem 1rem', textAlign: 'center', color: row.nrr >= 0 ? 'var(--accent-green)' : 'var(--accent-red)' }}>{row.nrr >= 0 ? `+${row.nrr.toFixed(3)}` : row.nrr.toFixed(3)}</td>
                     </tr>
                   ))}
                 </tbody>

@@ -436,7 +436,8 @@ const gameReducer = (state, action) => {
       const newSchedule = [...state.schedule];
       newSchedule[state.currentMatchIndex] = {
         ...newSchedule[state.currentMatchIndex],
-        resultStr
+        resultStr,
+        completed: true
       };
 
       // Randomly generate a trade offer every 2 matches (30% chance)

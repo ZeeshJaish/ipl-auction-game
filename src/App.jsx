@@ -23,6 +23,7 @@ function App() {
       hasAutoRedirected.current = true;
       if (state.auctionPhase === 'SETUP') navigate('/dashboard', { replace: true });
       else if (state.auctionPhase === 'AUCTION') navigate('/auction', { replace: true });
+      else if (state.auctionPhase === 'RETENTIONS') navigate('/retentions', { replace: true });
       else navigate('/tournament', { replace: true });
     }
   }, [state.activeSlot, state.userTeam, state.auctionPhase]);
